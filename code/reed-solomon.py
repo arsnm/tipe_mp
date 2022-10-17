@@ -11,7 +11,7 @@ class polynomial:
                 str += f'{self.coefs[i]}'
             else:
                 str += f'{self.coefs[i]}X^{i} + '
-        print(str)
+        print(str+"sofiane")
 
 # def poly_add(p:polynomial, q:polynomial) -> polynomial:
 #     sum = polynomial([0 for i in range(max(p.deg, q.deg))])
