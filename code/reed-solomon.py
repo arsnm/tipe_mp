@@ -1,3 +1,4 @@
+
 class polynomial:
     def __init__(self, coefs:list) -> None:
         self.coefs = coefs
@@ -41,7 +42,7 @@ def poly_root_development(coefs:list, acc = polynomial([1])) -> polynomial:
 class reedSolomon:
     def __init__(self, coefs) -> None:
         self.coefs = coefs
-    def encode(self, n:int, k:int, t:int) -> list: # method to code an information of k byte(s) to n byte(s) (having t = n-k bytes(s) of redundance)
+    def encode(self, n:int, k:int, t:int): # method to code an information of k byte(s) to n byte(s) (having t = n-k bytes(s) of redundance)
         pass
     
 
@@ -51,7 +52,7 @@ def cutting(p:polynomial):
     p1 = polynomial([p.coefs[i] for i in range(m, m + len(p.coefs) - 1)])
     return p0,p1
 
-def poly_expo(n:int, p:polynomial) -> polynomial:
+def poly_expo(p:polynomial, n:int) -> polynomial:
     '''multiply a polynomial by X^n'''
     m = p.deg
     prod = polynomial([0 for i in range(n + m)])
@@ -60,19 +61,19 @@ def poly_expo(n:int, p:polynomial) -> polynomial:
     return prod
 
 def poly_multi(p:polynomial, q:polynomial) -> polynomial:
-    n = p.deg
-    m = (n + 1) // 2
-    if n == 1:
+    n1 = p.deg
+    n2 = q.deg
+    m = (n1 + 1) // 2
+    if n1 == 0 and n2 == 0:
         return polynomial([p.coefs[0]*q.coefs[0]])
     else:
-        p0, p1 = cutting(p)
-        q0, q1 = cutting(q)
-        p0q0,p1q1 = poly_multi(p0,q0), poly_multi(p1,q1)
-        mb1  =  poly_expo((2*m), p1q1)
-        mb2 = poly_expo(m, (poly_substract(poly_multi((poly_add(p0,p1)),(poly_add(q0, q1))), (poly_add(p0q0, p1q1)))))
-        return poly_add(mb1, (poly_add(mb2, p0q0)))
+        a, b = cutting(p)
+        c, d = cutting(q)
+        e = poly_multi(a,b)
+        f = poly_multi(c,d)
+        g = poly_multi(poly_add(a,b),poly_add(c,d))
+        return poly_add(e,poly_add(poly_expo(poly_substract(poly_substract(g,f),e),m),poly_expo(f,2*m)))
 
-
-p = polynomial([3])
-q = polynomial([7])
-print(poly_multi(p,q))
+p = polynomial([3,7])
+q = polynomial([7,1])
+print(poly_multi(p,q).litteral_representation())
