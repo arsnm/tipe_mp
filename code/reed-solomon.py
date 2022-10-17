@@ -3,7 +3,9 @@ class polynomial:
         self.coefs = coefs
         self.len = len(coefs)
         self.deg = self.len - 1
-        self.max_coef = coefs[-1]
+        if self.deg > -1:
+            self.max_coef = coefs[-1]
+
     def litteral_representation(self) -> None:
         str = ""
         for i in reversed(range(self.len)):
@@ -25,6 +27,9 @@ def poly_product(p:polynomial, q:polynomial) -> polynomial:
         for j in range(q.len):
             A.coefs[i+j] += p.coefs[i] * q.coefs[j]
     return A
+
+def poly_substract(p:polynomial, q:polynomial) -> polynomial:
+    return poly_add(p, poly_product(q, polynomial([-1])))
 
 def poly_root_development(coefs:list, acc = polynomial([1])) -> polynomial:
     if len(coefs) == 1:
@@ -49,9 +54,9 @@ def cutting(p:polynomial):
 def poly_expo(n:int, p:polynomial) -> polynomial:
     '''multiply a polynomial by X^n'''
     m = p.deg
-    prod = [0 for i in range(n + m)]
+    prod = polynomial([0 for i in range(n + m)])
     for i in range(m):
-        prod[i + n] <- p.coefs[i]
+        prod.coefs[i + n] = p.coefs[i]
     return prod
 
 def poly_multi(p:polynomial, q:polynomial) -> polynomial:
@@ -60,7 +65,8 @@ def poly_multi(p:polynomial, q:polynomial) -> polynomial:
     if n == 1:
         return polynomial([p.coefs[0]*q.coefs[0]])
     else:
-        p0, p1, q0, q1 = cutting(p), cutting(p)
+        p0, p1 = cutting(p)
+        q0, q1 = cutting(q)
         p0q0,p1q1 = poly_multi(p0,q0), poly_multi(p1,q1)
         mb1  =  poly_expo((2*m), p1q1)
         mb2 = poly_expo(m, (poly_substract(poly_multi((poly_add(p0,p1)),(poly_add(q0, q1))), (poly_add(p0q0, p1q1)))))
