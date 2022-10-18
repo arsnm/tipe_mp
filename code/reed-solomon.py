@@ -41,7 +41,7 @@ def poly_root_development(coefs:list, acc = polynomial([1])) -> polynomial:
 class reedSolomon:
     def __init__(self, coefs) -> None:
         self.coefs = coefs
-    def encode(self, n:int, k:int, t:int) -> list: # method to code an information of k byte(s) to n byte(s) (having t = n-k bytes(s) of redundance)
+    def encode(self, n:int, k:int, t:int): # method to code an information of k byte(s) to n byte(s) (having t = n-k bytes(s) of redundance)
         pass
     
 
@@ -62,7 +62,7 @@ def poly_expo(n:int, p:polynomial) -> polynomial:
 def poly_multi(p:polynomial, q:polynomial) -> polynomial:
     n = p.deg
     m = (n + 1) // 2
-    if n == 1:
+    if n == -1:
         return polynomial([p.coefs[0]*q.coefs[0]])
     else:
         p0, p1 = cutting(p)
@@ -73,6 +73,6 @@ def poly_multi(p:polynomial, q:polynomial) -> polynomial:
         return poly_add(mb1, (poly_add(mb2, p0q0)))
 
 
-p = polynomial([3])
-q = polynomial([7])
-print(poly_multi(p,q))
+p = polynomial([3,1])
+q = polynomial([0,7])
+poly_multi(p, q).litteral_representation()
