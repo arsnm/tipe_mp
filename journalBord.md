@@ -2,7 +2,7 @@
 
 > TIPE 2022/23 - MP - La Ville
 
-## Problématique
+## Problématique (Plus valable)
 
 **Comment détecter et se protéger face aux contrefaçons ?** \
 Système de détection et de protection des contrefaçon à l'aide des QR Codes et du Code de Reed-Solomon.
@@ -16,3 +16,5 @@ Système de détection et de protection des contrefaçon à l'aide des QR Codes 
 - **10/10**: Début de la mise en place de la structure de polynome en python (utilisation de `list`)
 
 -**17/10**: Avancés (minimes) sur le code + découverte de l'algorithme FFT -> choix la dessus -> algo incroyable
+
+--**vacances**: probablement un changement de problématique et de thème : la compression de données.
