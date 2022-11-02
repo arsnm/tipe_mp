@@ -1,15 +1,16 @@
 #module useful to compute complex numbers
+#disclaimer : this class is not made to deal with less than 1e-10 values
 
 #packages
-from numpy import arctan2, cos, pi, sin, sqrt, isclose
-
+from numpy import arctan2, cos, pi, sin, sqrt
+from math import isclose
 
 #functions
 class Complex:
     """Computing complex numbers"""
     def __init__(self, real=0., imaginary=0.):
-            self.re = real
-            self.im = imaginary
+            self.re = round(real, 13)
+            self.im = round(imaginary,13)
     def __str__(self) -> str:
         if self.im == 0.:
             string = f"{self.re}"
@@ -21,21 +22,51 @@ class Complex:
     __repr__ = __str__
     def __eq__(self, other) -> bool:
         return bool(isclose(self.re, other.re) and isclose(self.im, other.im))
+    def is_null(self):
+        return isclose(self.re, 0) and isclose(self.im, 0)
+    def is_real(self):
+        return isclose(self.im, 0)
+    def is_imaginary(self):
+        return isclose(self.re, 0)
     def arg(self):
         """return the argument of the complex number
         return None if 0"""
-        if (self.re, self.im) == (0,0):
+        if self.is_null():
             arg = None
         else:
-            arg = arctan2(self.re, self.im)
+            arg = round(arctan2(self.re, self.im), 13)
         return arg
     def module(self):
         """return the module of the complex number"""
-        return sqrt(self.re**2 + self.im**2)
+        return round(sqrt(self.re**2 + self.im**2), 13)
     def conjuagate(self):
         return (Complex(self.re, -self.im))
+    #arithmetic
+    def __add__(self, other):
+        return Complex(self.re + other.re, self.im + other.im)
+    def __sub__(self, other):
+        return Complex(self.re - other.re, self.im - other.im)
+    def __mul__(self, other):
+        real = (self.re * other.re) - (self.im * other.im)
+        imaginary = (self.re * other.im) + (self.im * other.re)
+        return Complex(real, imaginary)
+    def __truediv__(self, other):
+        if other.is_null():
+            raise ValueError("Error : dividing by 0")
+        elif other.is_real():
+            return Complex(self.re / other.re, self.im / other.re)
+        else:
+            denominator = (other.re ** 2) + (other.im ** 2)
+            real = ((self.re * other.re) + (self.im * other.im)) / denominator
+            imaginary = ((self.im * other.re) - (self.re * other.im)) / denominator
+            return Complex(real, imaginary)
+
+
+
+
+
     
-def addition(*complexes:Complex) -> Complex:
+def addition(*complexes:Complex) -> Complex: #partially depreciated (can still be usefull for more iterable arguments)
     """calculate the sum of complex numbers
     
     parameters
@@ -52,7 +83,7 @@ def addition(*complexes:Complex) -> Complex:
         res.im += number.im
     return res
 
-def difference(cpx1:Complex, cpx2:Complex = Complex(0)):
+def difference(cpx1:Complex, cpx2:Complex = Complex(0)): #fully depreciated
     """calculate the difference of two complex numbers
     
     parameters
@@ -68,22 +99,7 @@ def difference(cpx1:Complex, cpx2:Complex = Complex(0)):
     res.im = cpx1.im - cpx2.im
     return res
 
-def exp_to_literal(arg:float, module:float = 1.0) -> Complex:
-    """ return the literal expression of a complex number defined by its argument and module
-
-    parameters
-    ----------
-        - arg : type(float) (should be between 0 and 2pi
-        - module : type(float) (must have a positive value)(=1 by default)
-
-    return
-    ------
-        - Complex number associated"""
-    assert(module >= 0), "second-arguments(module) must have a positive value"
-    return Complex(module*cos(arg), module*sin(arg))
-
-
-def product(*complexes:Complex) -> Complex:
+def product(*complexes:Complex) -> Complex: #partially depreciated (can still be usefull for more iterable arguments)
     """calculate the product of complex numbers
     
     parameters
@@ -100,6 +116,20 @@ def product(*complexes:Complex) -> Complex:
         res.re = re
         res.im = im
     return res
+
+def exp_to_literal(arg:float, module:float = 1.0) -> Complex:
+    """ return the literal expression of a complex number defined by its argument and module
+
+    parameters
+    ----------
+        - arg : type(float) (should be between 0 and 2pi
+        - module : type(float) (must have a positive value)(=1 by default)
+
+    return
+    ------
+        - Complex number associated"""
+    assert(module >= 0), "second-arguments(module) must have a positive value"
+    return Complex(module*cos(arg), module*sin(arg))
 
 def nth_root(n:int, cpx:Complex = Complex(1)) -> Complex:
     """calculate the nth root of a complex number
@@ -151,5 +181,5 @@ def inverse_nth_roots_unity(n:int) -> list:
         roots[k] = exp_to_literal((-2*k*pi/n), 1.0)
     return roots
 
-test = product(Complex(0,1.0), Complex(2))
-print(test)
+if __name__ == "__main__":
+    pass
