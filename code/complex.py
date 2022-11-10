@@ -35,8 +35,12 @@ class Complex:
         return None if 0"""
         if self.is_null():
             arg = None
+        elif isclose(self.re, 0) and self.im > 0:
+            arg = pi / 2
+        elif isclose(self.re, 0) and self.im < 0:
+            arg = - pi / 2
         else:
-            arg = round(arctan2(self.re, self.im), 15)
+            arg = round(arctan2(self.im, self.re), 15)
         return arg
     def module(self):
         """return the module of the complex number"""
