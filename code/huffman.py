@@ -1,8 +1,8 @@
 import heapq as hp
 
-def table_frequences(L):
+def table_frequences(texte):
     table = {}
-    for a in L:
+    for a in texte:
         if a in table:
             table[a] += 1
         else:
@@ -10,8 +10,8 @@ def table_frequences(L):
     return table
 
 
-def arbre_huffman(dict):
-    tas = [(a, b) for (b, a) in dict.items()]
+def arbre_huffman(occ):
+    tas = [(a, b) for (b, a) in occ.items()]
     hp.heapify(tas)
     while len(tas) >= 2:
         occ1, noeud1 = hp.heappop(tas) # noeud le moins fréquent
@@ -33,20 +33,20 @@ def code_huffman(arbre):
     return code
 
 
-def encodage(L,code):
+def encodage(texte,code):
     code_inv = dict((code[bits], bits) for bits in code)
     texte_binaire = ''
-    for c in L:
+    for c in texte:
         texte_binaire = texte_binaire + code_inv[c]
     return texte_binaire
 
 
 def decodage(code,texte_binaire):
-    L = []
+    texte = ''
     suite_bin = ''
     for a in texte_binaire:
         suite_bin = suite_bin + a
         if suite_bin in code:
-            L = L + code[suite_bin]
+            texte += code[suite_bin]
             suite_bin = ''
-    return L
+    return texte
