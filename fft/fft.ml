@@ -30,9 +30,11 @@ let rec fft p w = (** /4 **)
   else let p0, p1 = divise p in
        let wcarre = mul w w in
        let t0, t1 = fft p0 wcarre, fft p1 wcarre in
-       let rec aux wk l0 l1 = match l0, l1 with (* construit la transformée de p à partir de celles de p0 et p1 *)
-	 | [], [] -> []
-	 | y0::q0, y1::q1 -> (add y0 (mul wk y1))::aux (mul w wk) q0 q1 in
+       let rec aux wk l0 l1 = 
+        match l0, l1 with (* construit la transformée de p à partir de celles de p0 et p1 *)
+	      | [], [] -> []
+        | [], _::_ | _::_,[] -> failwith "p a un nombre impair de coefficient"
+        | y0::q0, y1::q1 -> (add y0 (mul wk y1))::aux (mul w wk) q0 q1 in
        aux un (t0@t0) (t1@t1);;
 
 (* Soit C(n) la complexité de fft p w pour p de taille n. 
@@ -64,6 +66,7 @@ completer [un; un; un];;
 
 let rec mul_ft p q = match p, q with
   | [], [] -> []
+  | [], _ | _, [] -> failwith "p et q ne sont pas de même taille"
   | p0::p', q0::q' -> (mul p0 q0)::mul_ft p' q';;
 
 let coeff r =

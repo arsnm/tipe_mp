@@ -8,7 +8,7 @@ from scipy.fft import fft, ifft
 
 #functions
 def FFT(poly:list) -> list:
-    """caclulate the fast fourier tranform of a polynomial
+    """calculate the fast fourier tranform of a polynomial
     
     parameters
     ----------
