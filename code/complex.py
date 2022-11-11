@@ -33,8 +33,13 @@ class Complex:
         return None if 0"""
         if self.is_null():
             arg = None
+        elif self.is_imaginary():
+            if self.im < 0:
+                arg = round(- pi/2, 13)
+            else:
+                arg = round(pi/2, 13)
         else:
-            arg = round(arctan2(self.re, self.im), 13)
+            arg = round(arctan2(self.im, self.re), 13)
         return arg
     def module(self):
         """return the module of the complex number"""
@@ -111,8 +116,8 @@ def product(*complexes:Complex) -> Complex: #partially depreciated (can still be
         - product of the complex numbers"""
     res = Complex(1)
     for number in complexes:
-        re= res.re * number.re - res.im * number.im
-        im= res.re * number.im + res.im * number.re
+        re = res.re * number.re - res.im * number.im
+        im = res.re * number.im + res.im * number.re
         res.re = re
         res.im = im
     return res
@@ -122,13 +127,13 @@ def exp_to_literal(arg:float, module:float = 1.0) -> Complex:
 
     parameters
     ----------
-        - arg : type(float) (should be between 0 and 2pi
+        - arg : type(float) (should be between 0 and 2pi)
         - module : type(float) (must have a positive value)(=1 by default)
 
     return
     ------
         - Complex number associated"""
-    assert(module >= 0), "second-arguments(module) must have a positive value"
+    assert(module >= 0), "second-argument(module) must have a positive value"
     return Complex(module*cos(arg), module*sin(arg))
 
 def nth_root(n:int, cpx:Complex = Complex(1)) -> Complex:
