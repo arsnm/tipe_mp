@@ -35,15 +35,15 @@ class Complex:
             arg = None
         elif self.is_imaginary():
             if self.im < 0:
-                arg = round(- pi/2, 13)
+                arg = round(- pi/2, 15)
             else:
-                arg = round(pi/2, 13)
+                arg = round(pi/2, 15)
         else:
-            arg = round(arctan2(self.im, self.re), 13)
+            arg = round(arctan2(self.im, self.re), 15)
         return arg
     def module(self):
         """return the module of the complex number"""
-        return round(sqrt(self.re**2 + self.im**2), 13)
+        return round(sqrt(self.re**2 + self.im**2), 15)
     def conjuagate(self):
         return (Complex(self.re, -self.im))
     #arithmetic
