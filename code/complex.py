@@ -4,13 +4,15 @@
 #packages
 from numpy import arctan2, cos, pi, sin, sqrt
 from math import isclose
+from typing import Union, List
+
 
 #functions
 class Complex:
     """Computing complex numbers"""
     def __init__(self, real=0., imaginary=0.):
-            self.re = round(real, 13)
-            self.im = round(imaginary,13)
+            self.re = real # round(real, 15)
+            self.im = imaginary # round(imaginary,15)
     def __str__(self) -> str:
         if self.im == 0.:
             string = f"{self.re}"
@@ -33,11 +35,10 @@ class Complex:
         return None if 0"""
         if self.is_null():
             arg = None
-        elif self.is_imaginary():
-            if self.im < 0:
-                arg = round(- pi/2, 15)
-            else:
-                arg = round(pi/2, 15)
+        elif isclose(self.re, 0) and self.im > 0:
+            arg = pi / 2
+        elif isclose(self.re, 0) and self.im < 0:
+            arg = - pi / 2
         else:
             arg = round(arctan2(self.im, self.re), 15)
         return arg
@@ -66,11 +67,8 @@ class Complex:
             imaginary = ((self.im * other.re) - (self.re * other.im)) / denominator
             return Complex(real, imaginary)
 
+Num = Union[int, float]
 
-
-
-
-    
 def addition(*complexes:Complex) -> Complex: #partially depreciated (can still be usefull for more iterable arguments)
     """calculate the sum of complex numbers
     
@@ -88,7 +86,7 @@ def addition(*complexes:Complex) -> Complex: #partially depreciated (can still b
         res.im += number.im
     return res
 
-def difference(cpx1:Complex, cpx2:Complex = Complex(0)): #fully depreciated
+def difference(cpx1:Complex, cpx2:Complex = Complex(0)): #fully depreciated (replaced by __sub__ Complex methods)
     """calculate the difference of two complex numbers
     
     parameters
@@ -185,6 +183,13 @@ def inverse_nth_roots_unity(n:int) -> list:
     for k in range(0,n):
         roots[k] = exp_to_literal((-2*k*pi/n), 1.0)
     return roots
+
+def make_complex(values:List[Num]) -> List[Complex]:
+    res = []
+    for value in values:
+        res.extend([Complex(value)])
+    return res
+
 
 if __name__ == "__main__":
     pass
