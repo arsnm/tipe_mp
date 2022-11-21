@@ -20,3 +20,5 @@ Système de détection et de protection des contrefaçon à l'aide des QR Codes 
 - **vacances**: Probablement un changement de problématique et de thème : la compression de données.
 
 - **14/11**: Algo fft + début code huffman
+
+- **21/11**:
