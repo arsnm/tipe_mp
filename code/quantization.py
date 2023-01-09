@@ -1,4 +1,4 @@
-from math import floor
+# Module to quantize an 8x8 block
 
 table_quantization = [[16,11,10,16,24,40,51,61],
                       [12,12,14,19,26,58,60,55],
@@ -9,21 +9,23 @@ table_quantization = [[16,11,10,16,24,40,51,61],
                       [49,64,78,87,103,121,120,101],
                       [72,92,95,98,112,100,103,99]]
 
-def quantization(m):
-    r = [[0] * 8 for _ in range(8)]
+def quantize(block, quantiz_matrix=table_quantization):
+    output = [[0] * 8 for _ in range(8)]
     for i in range(8):
         for j in range(8):
-            r[i][j] = round(m[i][j] / table_quantization[i][j])
-    return r
+            output[i][j] = block[i][j] // quantiz_matrix[i][j]
+    return output
 
 
-m = [[338,145,-8,18,-7,4,16,-14],
-     [162,-41,3,2,3,-1,-13,9],
-     [-17,57,-2,-2,-20,16,2,10],
-     [41,19,-24,31,-19,-8,4,-1],
-     [-59,7,-2,-32,21,-1,6,-15],
-     [-19,12,32,0,-16,-9,-15,12],
-     [7,-55,-24,17,20,15,-4,0],
-     [15,-11,10,11,-18,-13,10,-10]]
+if __name__ == "__main__":
+    
+    block_test = [[338,145,-8,18,-7,4,16,-14],
+        [162,-41,3,2,3,-1,-13,9],
+        [-17,57,-2,-2,-20,16,2,10],
+        [41,19,-24,31,-19,-8,4,-1],
+        [-59,7,-2,-32,21,-1,6,-15],
+        [-19,12,32,0,-16,-9,-15,12],
+        [7,-55,-24,17,20,15,-4,0],
+        [15,-11,10,11,-18,-13,10,-10]]
 
-print(quantization(m))
+    print(quantize(block_test))

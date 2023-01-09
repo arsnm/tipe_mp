@@ -30,10 +30,14 @@ def zigzag(matrix):
         
     return [item for sublist in solution for item in sublist]
 
+def zigzag_inverse(matrix):
+    """return the reversed list returned by `zigzag(matrix)`"""
+    return zigzag(matrix)[::-1]
+
 if __name__ == "__main__":
     test = [[i+j for j in range(8)] for i in range(0,64,8)]
     print(zigzag(test))
-
+    print(zigzag_inverse(test))
 
         
     

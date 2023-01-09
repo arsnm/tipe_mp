@@ -1,13 +1,12 @@
-#module useful to compute complex numbers
-#disclaimer : this class is not made to deal with less than 1e-10 values
+# Module computing complex numbers
+# disclaimer : this class is not made to deal with less than 1e-10 values
 
-#packages
+
 from numpy import arctan2, cos, pi, sin, sqrt
 from math import isclose
 from typing import Union, List
 
 
-#functions
 class Complex:
     """Computing complex numbers"""
     def __init__(self, real=0., imaginary=0.):

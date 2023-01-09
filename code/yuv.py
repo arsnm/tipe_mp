@@ -1,3 +1,5 @@
+#Module transforming RGB images into YUV
+
 yuv = [[0.299,0.587,0.114],
        [-0.147,-0.289,0.436],
        [0.615,-0.407,-0.079]]

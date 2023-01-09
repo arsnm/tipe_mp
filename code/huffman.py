@@ -1,52 +1,102 @@
-import heapq as hp
-
-def table_frequences(texte):
-    table = {}
-    for a in texte:
-        if a in table:
-            table[a] += 1
-        else:
-            table[a] = 1
-    return table
+# Module computing Huffman compression
 
 
-def arbre_huffman(occ):
-    tas = [(a, b) for (b, a) in occ.items()]
-    hp.heapify(tas)
-    while len(tas) >= 2:
-        occ1, noeud1 = hp.heappop(tas) # noeud le moins fréquent
-        occ2, noeud2 = hp.heappop(tas) # 2e noeud le moins fréquent
-        hp.heappush(tas, (occ1 + occ2, {0: noeud1, 1: noeud2}))
-    return hp.heappop(tas)[1]
+from collections import Counter, namedtuple
+from heapq import heapify, heappop, heappush
 
 
-def code_huffman_parcours(arbre, prefixe, code):
-    for noeud in arbre:
-        if len(arbre[noeud]) == 1:
-            code[prefixe+noeud] = arbre[noeud]
-        else:
-            code_huffman_parcours(arbre[noeud],prefixe+noeud,code)
-            
-def code_huffman(arbre):
-    code = {}
-    code_huffman_parcours(arbre, '', code)
-    return code
+# Node in a Huffman Tree
+Node = namedtuple("Node", ["char", "freq"])
+
+class HuffmanCompressor:
+    """Huffman compression implementation"""
+    def __init__(self):
+        self.encoding_table = {}
+        self.decoding_table = {}
+
+    def build_tables(self, s: str):
+        """create both the encodingn and decoding tables of a given string
+    
+    parameters
+    ----------
+        -s : string used to build the tables
+    
+    return
+    ------
+        - fill both the encoding and decoding table of the given class instance"""
+    
+        freq_table = Counter(s)
+        
+        # create a heap of the nodes in the tree
+        heap = []
+        for char, freq in freq_table.items():
+            heap.append(Node(char, freq))
+        heapify(heap)
+        
+        # create the Huffman tree
+        while len(heap) > 1:
+            left_node = heappop(heap)
+            right_node = heappop(heap)
+            combined_node = Node(None, left_node.freq + right_node.freq)
+            heappush(heap, combined_node)
+        
+        def build_encoding_table(node, code=''):
+            if node.char is not None:
+                # if the node is a leaf, add it to the encoding table
+                self.encoding_table[node.char] = code
+                return
+            # if the node is not a leaf, recursively build the encoding table
+            build_encoding_table(node.left, code + '0')
+            build_encoding_table(node.right, code + '1')
+        
+        build_encoding_table(heap[0])
+
+        
+        def build_decoding_table(node, code=''):
+            if node.char is not None:
+                # if the node is a leaf, add it to the decoding table
+                self.decoding_table[code] = node.char
+                return
+            # if the node is not a leaf, recursively build the decoding table
+            build_decoding_table(node.left, code + "0")
+            build_decoding_table(node.right, code + "1")
+        
+        build_decoding_table(heap[0])
+    
+    def compress(self, s: str) -> str:
+        """compress the inputed string
+    
+    parameters
+    ----------
+        -s : string to be compressed
+    
+    return
+    ------
+        - compressed string"""
+        compressed = ""
+        for char in s:
+            compressed += self.encoding_table[char]
+        return compressed
+    
+    def decompress(self, compressed: str) -> str:
+        """decompress the inputed string
+    
+    parameters
+    ----------
+        -s : string to be compressed
+    
+    return
+    ------
+        - decompressed string"""
+        decompressed = ""
+        i = 0
+        while i < len(compressed):
+            for j in range(i+1, len(compressed)+1):
+                if compressed[i:j] in self.decoding_table:
+                    decompressed += self.decoding_table[compressed[i:j]]
+                    i = j
+                    break
+        
+        return decompressed
 
 
-def encodage(texte,code):
-    code_inv = dict((code[bits], bits) for bits in code)
-    texte_binaire = ''
-    for c in texte:
-        texte_binaire = texte_binaire + code_inv[c]
-    return texte_binaire
-
-
-def decodage(code,texte_binaire):
-    texte = ''
-    suite_bin = ''
-    for a in texte_binaire:
-        suite_bin = suite_bin + a
-        if suite_bin in code:
-            texte += code[suite_bin]
-            suite_bin = ''
-    return texte
