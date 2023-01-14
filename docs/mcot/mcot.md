@@ -30,7 +30,7 @@ En s'appuyant sur l'image, format de donnnée essentiel à la communication, il 
 | Quantification   | Quantization    |
 | Sans-Perte   | Lossless   |
 | Avec-Perte   | Lossy    |
-| Redondance   | Texte    |
+| Codage Arithmetique   |  Arithmetic Coding   |
 
 ### Bibliographie commentée
 
