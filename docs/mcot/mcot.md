@@ -29,7 +29,6 @@ INFORMATIQUE(*Informatique Pratique*), MATHEMATIQUES(*Mathématiques Appliquées
 | Redondance   | Redondancy    |
 | Quantification   | Quantization    |
 | Sans-Perte   | Lossless   |
-| Avec-Perte   | Lossy    |
 | Codage Arithmétique   |  Arithmetic Coding   |
 
 ### Bibliographie commentée
