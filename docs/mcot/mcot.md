@@ -1,10 +1,10 @@
 # MCOT
 
-## La compression de données apliquées aux images
+## La compression de données appliquées aux images
 
-La manipulation inscessante de données au quotidien fait de son optimisation une nécessité. Outre les infrastuctures matériels, des améliorations logiciels s'avèrent utiles. C'est le cas de la compression de données, qui permet la restitution d'un maximum d'informations tout en limitant la taille de ces dites données, ceci permettant ainsi une transimission et un stockage plus optimal, une exigence qui s'applique evidemment au thème de la ville, tant le milieu urbain abonde de données et d'informations.
+La manipulation incessante de données au quotidien fait de son optimisation une nécessité. Outre les infrastructures matérielles, des améliorations logiciels s'avèrent utiles. C'est le cas de la compression de données, qui permet la restitution d'un maximum d'informations tout en limitant la taille de cesdites données, ceci permettant ainsi une transmission et un stockage plus optimal, une exigence qui s'applique évidemment au thème de la ville, tant le milieu urbain abonde de données et d'informations.
 
-En s'appuyant sur l'image, format de donnnée essentiel à la communication, il est intéressant de s'inspirer de modèles et d'algorithmes existants, afin de les combiner pour identifier les compressions optimals à certaines applications.
+En s'appuyant sur l'image, format de donnnée essentiel à la communication, il est intéressant de s'inspirer de modèles et d'algorithmes existants, afin de les combiner pour identifier les compressions optimales à certaines applications.
 
 **Professeur encadrant du candidat:**
 
@@ -19,7 +19,7 @@ En s'appuyant sur l'image, format de donnnée essentiel à la communication, il 
 
  ### Positionnement thématique
 
- MATHEMATIQUES(*Probabilités*), INFORMATIQUE(*Languages*), INFORMATIQUE(*Informatique Pratique*), MATHEMATIQUES(*Mathématiques Appliquées*)
+INFORMATIQUE(*Informatique Pratique*), MATHEMATIQUES(*Mathématiques Appliquées*), (MATHEMATIQUES(*Probabilités*), INFORMATIQUE(*Languages*))
 
  ### Mots-clés
 
@@ -30,7 +30,7 @@ En s'appuyant sur l'image, format de donnnée essentiel à la communication, il 
 | Quantification   | Quantization    |
 | Sans-Perte   | Lossless   |
 | Avec-Perte   | Lossy    |
-| Codage Arithmetique   |  Arithmetic Coding   |
+| Codage Arithmétique   |  Arithmetic Coding   |
 
 ### Bibliographie commentée
 
