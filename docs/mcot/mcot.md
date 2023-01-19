@@ -57,4 +57,14 @@ INFORMATIQUE(*Informatique Pratique*), MATHEMATIQUES(*Mathématiques Appliquées
 5. En Mars, implémentation des différentes algorithmes améliorant potentiellement le JPEG.
 6. En Mai, étude sur des utilisations concrètes de données, calcul des temps de compression et des tailles de stockages des divers implémentation, comparaison des efficacités. 
 
+
+
+### Liens : 
+
+- [Huffman Coding](http://compression.ru/download/articles/huff/huffman_1952_minimum-redundancy-codes.pdf)
+- [Entropie](https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf)
+- [Image Compression](https://www.w3.org/Graphics/JPEG/itu-t81.pdf)
+- [Codage Arithmetique](https://arxiv.org/pdf/0705.2938.pdf)
+
+
  
