@@ -2,6 +2,10 @@
 
 ## La compression de données appliquées aux images
 
+Nous manipulons quotidiennement des fichiers compressés sans trop savoir ce qui se cache derrière. Il est donc intéressant, en se basant sur le format graphique qu'est l'image, de comprendre comment une infomation peut etre stockée en réduisant sa taille au maximum.
+
+La ville est un espace où l'information est omniprésente, sous de diverses formes. Il est donc nécéssaire d'optimiser les communications, d'où l'importance de la compression. Cette compression est due à divers modèles d'algorithmes, qu'il est intéressant de combiner pour étudier leur optimalité.
+
 La manipulation incessante de données au quotidien fait de son optimisation une nécessité. Outre les infrastructures matérielles, des améliorations logiciels s'avèrent utiles. C'est le cas de la compression de données, qui permet la restitution d'un maximum d'informations tout en limitant la taille de cesdites données, ceci permettant ainsi une transmission et un stockage plus optimal, une exigence qui s'applique évidemment au thème de la ville, tant le milieu urbain abonde de données et d'informations.
 
 En s'appuyant sur l'image, format de donnnée essentiel à la communication, il est intéressant de s'inspirer de modèles et d'algorithmes existants, afin de les combiner pour identifier les compressions optimales à certaines applications.
@@ -33,6 +37,7 @@ INFORMATIQUE(*Informatique Pratique*), MATHEMATIQUES(*Mathématiques Appliquées
 
 ### Bibliographie commentée
 
+Au coeurs des communications
 ### Problématique retenue
 
 ### Objectif du TIPE du candidat
