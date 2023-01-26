@@ -4,3 +4,21 @@
 __pycache__
 test.py
 .pytest_cache
+
+#latex related
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+.*.lb
+*.fdb_latexmk
+*.synctex.gz
+*.pygstyle
+*.pygtex
