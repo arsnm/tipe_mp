@@ -4,11 +4,11 @@
 
 Nous manipulons quotidiennement des fichiers compressés sans trop savoir ce qui se cache derrière. Il est donc intéressant, en se basant sur le format graphique qu'est l'image, de comprendre comment une infomation peut etre stockée en réduisant sa taille au maximum.
 
-La ville est un espace où l'information est omniprésente, sous de diverses formes. Il est donc nécéssaire d'optimiser les communications, d'où l'importance de la compression. Cette compression est due à divers modèles d'algorithmes, qu'il est intéressant de combiner pour étudier leur optimalité.
+La ville est un espace où l'information est omniprésente, sous de diverses formes. Il est donc nécéssaire d'optimiser les communications et le stockage des données, d'où l'importance de la compression. Cette compression est due à divers modèles d'algorithmes, qu'il est intéressant de combiner pour étudier leur optimalité.
 
 **Professeur encadrant du candidat:**
 
- - Q. Fortier (?)
+ - Q. Fortier
 
 **Ce TIPE fait l'objet d'un travail de groupe.**  
 **Listes des membres du groupe:** 
@@ -19,7 +19,10 @@ La ville est un espace où l'information est omniprésente, sous de diverses for
 
  ### Positionnement thématique
 
-INFORMATIQUE(*Informatique Pratique*), MATHEMATIQUES(*Mathématiques Appliquées*), (MATHEMATIQUES(*Probabilités*), INFORMATIQUE(*Languages*))
+- INFORMATIQUE(*Informatique Pratique*)
+- MATHEMATIQUES(*Mathématiques Appliquées*)
+- (MATHEMATIQUES(*Probabilités*)
+- INFORMATIQUE(*Languages*))
 
  ### Mots-clés
 
