@@ -22,3 +22,9 @@ test.py
 *.synctex.gz
 *.pygstyle
 *.pygtex
+*.run.xml
+
+#latex + biblatex related
+*.bbl 
+*.bcf
+*.blg
