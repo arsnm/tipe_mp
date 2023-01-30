@@ -27,7 +27,7 @@ La ville est un espace où l'information est omniprésente, notamment sous la fo
 
 | En français  | En anglais   |
 | ------- | -------- |
-| Enthropie   | Enthropy    |
+| Entropie   | Entropy    |
 | Redondance   | Redondancy    |
 | Quantification   | Quantization    |
 | Sans-Perte   | Lossless   |
