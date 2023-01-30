@@ -4,7 +4,7 @@
 
 Nous manipulons quotidiennement des fichiers compressés sans forcément connaître tous les protocoles qui officient. Il est donc intéressant, en se basant sur le format graphique qu'est l'image, de comprendre comment une infomation peut être stockée en réduisant sa taille au maximum.
 
-La ville est un espace où l'information est omniprésente, notamment sous la forme d'imagerie de surveillance. Il est donc nécéssaire d'optimiser les communications et le stockage des données, d'où l'importance de la compression. Cette compression est effectuée par divers algorithmes, qu'il est intéressant de combiner pour étudier leur optimalité.
+La ville est un espace où l'information est omniprésente, notamment sous la forme d'imagerie de surveillance. Il est donc nécessaire d'optimiser les communications et le stockage des données, d'où l'importance de la compression. Cette compression est effectuée par divers algorithmes, qu'il est intéressant de combiner pour étudier leur optimalité.
 
 **Professeur encadrant du candidat:**
 
