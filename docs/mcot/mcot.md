@@ -62,7 +62,7 @@ Il s'agit d'étudier et d'implémenter diverses méthodes de compression, afin d
 2. Modélisation de leur efficacité par une application concrète, en procédant à la compression d'un grand nombre d'images de différents types et tailles afin d'obtenir des données complètes,
 3. Comparaison des différentes méthodes, de leur gains ou pertes temporels et en termes de stockage.
 ### Objectif du TIPE du troisième membre du groupe(Sofiane)
-Etude théorique des différents modèles de compression, en se basant grandement sur le modèle du JPEG, afin d'implémenter ces procédés en Python. 
+Implémentation en python de la compression JPEG en utilisant différents procédés de compression et l'étude théorique de ces différentes méthodes de compression. Analyse de l'efficacité de l'algorithme en procédant à la compression d'un grand nombre d'images de différents types et tailles.
 
 ### Référence bibliographique
 1. 
