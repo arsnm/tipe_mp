@@ -1,10 +1,10 @@
 # MCOT
 
-## La compression de données appliquées aux images
+## La compression de données appliqués aux images
 
 Nous manipulons quotidiennement des fichiers compressés sans trop savoir ce qui se cache derrière. Il est donc intéressant, en se basant sur le format graphique qu'est l'image, de comprendre comment une infomation peut etre stockée en réduisant sa taille au maximum.
 
-La ville est un espace où l'information est omniprésente, sous de diverses formes. Il est donc nécéssaire d'optimiser les communications et le stockage des données, d'où l'importance de la compression. Cette compression est due à divers modèles d'algorithmes, qu'il est intéressant de combiner pour étudier leur optimalité.
+La ville est un espace où l'information est omniprésente, nottament sous la forme d'imagerie de surveillance. Il est donc nécéssaire d'optimiser les communications et le stockage des données, d'où l'importance de la compression. Cette compression est due à divers modèles d'algorithmes, qu'il est intéressant de combiner pour étudier leur optimalité.
 
 **Professeur encadrant du candidat:**
 
@@ -36,17 +36,16 @@ La ville est un espace où l'information est omniprésente, sous de diverses for
 
 ### Bibliographie commentée
 
-La compression de données, procédé consistant en la réduction de la taille des données tout en conservant l’information qu’elle comporte, est un domaine sujet à de nombreuses études tant il est essentiel au monde du numérique moderne. Basé sur la théorie de l’information [1], initié par Harry Nyquist and Ralph Hartley dans les années 1920 et très largement étoffé et formalisé en 1948 par Claude E. Shannon, la compression de données fait notamment intervenir des notions probabilistes, statistiques et informatiques. Les algorithmes de compressions se distinguent par leur caractère sans perte ou avec perte, caractère indiquant si de l’information est perdu ou non au cours de la compression. Ainsi, il est intéressant d’étudier des algorithmes avec et sans perte afin de mesurer leur efficacité et leur potentiels défauts.
+La compression de données, procédé consistant à réduire la taille des données tout en conservant l’information qu’elle comporte, est un domaine sujet à de nombreuses études tant il est essentiel au monde du numérique moderne. Basée sur la théorie de l’information[1], initiée par Harry Nyquist et Ralph Hartley dans les années 1920 et très largement étoffée et formalisée en 1948 par Claude E. Shannon, la compression de données fait notamment intervenir des notions probabilistes, statistiques et informatiques.
 
-L’entropie, tel que définie par Shannon [1] est un concept mathématique essentiel puisqu’il permet de quantifier l’information contenue ou délivré par une source d’information. C’est par le calcul et l’optimisation de cette grandeur qu’apparaissent des algorithmes de compression sans perte comme le Codage de Huffman [2] en 1952, et plus tard le Codage Arithmétique [3].
+Les algorithmes de compression se distinguent par leur caractère sans perte ou avec perte, caractère indiquant si de l’information est perdue ou non au cours de la compression. Ainsi, il est intéressant d’étudier des algorithmes avec et sans perte afin de mesurer leur efficacité et leurs potentiels défauts. L’entropie, telle que définie par Shannon[1] est un concept mathématique essentiel puisqu’il permet de quantifier l’information contenue ou délivrée par une source d’information. C’est par le calcul et l’optimisation de cette grandeur qu’apparaissent des algorithmes de compression sans perte comme le codage de Huffman[2] en 1952, et plus tard le codage arithmétique[3].
 
-Bien que certains algorithmes puissent être suffisamment généralisés, il est mathématiquement démontré qu’il n’existe pas d’algorithme pouvant compresser n’importe quel type d’information sans perte [4]. Ainsi lorsqu’il est question de compression, il est nécessaire de l’étudier au travers d’un certain type d’information. C’est pourquoi nous avons choisi de nous focaliser sur le domaine de l’image, un type de données connaissant de nombreux procédés de compression [4][5].
+Il est mathématiquement démontré qu’il n’existe pas d’algorithme pouvant compresser n’importe quel type d’information sans perte[4]. On peut cependant tirer parti du type de données à compresser. C’est pourquoi nous avons choisi de nous focaliser sur le domaine de l’image, un type de données auquel s'appliquent de nombreux procédés de compression[4][5].
 
-L’Algorithme de compression du format JPEG (Joint Photographic Experts Group) [6], inventé en 1992, est un procédé de compression d’images avec pertes permettant de réduire entre 3 et 25 fois la taille d’un fichier en fonction de qualité finale que l’on veut obtenir. Il est aujourd’hui l’un des formats de compression les plus utilisés pour les images.
-
-L’algorithme de compression JPEG est constitué de plusieurs étapes. Il se base sur l’analyse des composantes de couleurs de l’image et de la perception humaine afin d’optimiser le regroupement de l’énergie. Pour ce faire, on traite l’image comme un signal, auquel on applique la Transformée en Cosinus Discrète (DCT) [6]. Cette transformation permet que l'information soit essentiellement portée par les coefficients de basses fréquences. Seul un petit nombre de coefficients seront donc non nuls, ce qui permet de réduire le nombre de calculs à effectuer par l’ordinateur.
-
-Vient ensuite la quantification, unique étape responsable de la perte d’information, et donc de la potentiel dégradation de qualité. Cette étape consiste à diviser les composantes formant l’image par des coefficients réducteurs, en fonction de leur importance dans la transmission de l’information. [5][6]. Enfin on code cette information « réduite » au moyen d’un codage tel qu’évoqué ci-dessus.
+L’algorithme de compression du format JPEG (Joint Photographic Experts Group)[6], inventé en 1992, est un procédé de compression d’images avec pertes permettant de réduire entre 3 et 25 fois la taille d’un fichier en fonction de la qualité finale que l’on veut obtenir. Il est aujourd’hui l’un des formats de compression les plus utilisés pour les images.
+L’algorithme de compression JPEG est constitué de plusieurs étapes.
+Il se base sur l’analyse des composantes de couleurs de l’image et de la perception humaine afin d’optimiser le regroupement de l’énergie. Pour ce faire, on traite l’image comme un signal, auquel on applique la Transformée en Cosinus Discrète (DCT)[6]. Cette transformation permet un portage de l’information essentiellement par les coefficients de basses fréquences. Seul un petit nombre de coefficients sera donc non nul, ce qui permet de réduire le nombre de calculs à effectuer par l’ordinateur.
+Vient ensuite la quantification, unique étape responsable de la perte d’information, et donc de la potentielle dégradation de qualité. Cette étape consiste à diviser les composantes formant l’image par des coefficients réducteurs, en fonction de leur importance dans la transmission de l’information[5][6]. Enfin on code cette information « réduite » au moyen d’un codage comme celui de Huffman.
 
 En effectuant les étapes dans le sens inverse, on peut retrouver l’information de départ (potentiellement tronquée), c’est la décompression.
 
