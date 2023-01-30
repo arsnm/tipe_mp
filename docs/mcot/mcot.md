@@ -21,8 +21,7 @@ La ville est un espace où l'information est omniprésente, notamment sous la fo
 
 - INFORMATIQUE(*Informatique Pratique*)
 - MATHEMATIQUES(*Mathématiques Appliquées*)
-- (MATHEMATIQUES(*Probabilités*)
-- INFORMATIQUE(*Languages*))
+- INFORMATIQUE (*Informatique Théorique*)
 
  ### Mots-clés
 
