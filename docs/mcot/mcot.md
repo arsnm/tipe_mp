@@ -1,6 +1,6 @@
 # MCOT
 
-## La compression de données appliqués aux images
+## La compression de données appliquée aux images
 
 Nous manipulons quotidiennement des fichiers compressés sans trop savoir ce qui se cache derrière. Il est donc intéressant, en se basant sur le format graphique qu'est l'image, de comprendre comment une infomation peut etre stockée en réduisant sa taille au maximum.
 
