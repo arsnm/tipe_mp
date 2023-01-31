@@ -55,7 +55,7 @@ En comparant l’information avant compression et après décompression, nous po
 Il s'agit d'étudier et d'implémenter diverses méthodes de compression, afin de mesurer leur efficacité et leurs limites, aussi bien théoriques que pratiques.
 
 ### Objectif du TIPE du premier membre du groupe(Maxime)
-
+Implémentation de différents algorithmes de compression afin de comparer leur efficacité. Mise en oeuvre pratique de ces procédés pour en étudier la performance. Mise en perspective des différents procédés ainsi que leurs avantages et/ou inconvénients respectifs.
 
 ### Objectif du TIPE du second membre du groupe(Arsène)
 1. Implémentation des différents procédés de compression,
