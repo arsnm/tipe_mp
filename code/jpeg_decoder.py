@@ -164,7 +164,6 @@ class JPEGReader:
 
         try:
             for count, component in enumerate(components, start=1):
-
                 # Get ID of color component
                 myId = data[dataHeader]
                 dataHeader += 1
@@ -172,7 +171,7 @@ class JPEGReader:
                 sample = data[dataHeader]
                 horizontalSample = sample >> 4
                 verticalSample = sample & 0x0F
-                
+
                 dataHeader += 1
 
                 # Get quantization table for the component
@@ -181,7 +180,8 @@ class JPEGReader:
 
                 myComponent = ColorComponent(
                     name=component,  # Name of the color component
-                    order=count - 1,  # Order in which the component will come in the image
+                    order=count
+                    - 1,  # Order in which the component will come in the image
                     horizontalSampling=horizontalSample,  # Amount of pixels sampled in the horizontal
                     verticalSampling=verticalSample,  # Amount of pixels sampled in the vertical
                     dqtId=myDqt,  # Quantization table selector
@@ -1057,6 +1057,39 @@ class JPEGReader:
         print(f"Successfully decoded file : {self.filePath.name} ")
         del self.__file
 
+    def writeOutput(self, extension="txt", binary=False):
+        output_file = Path(
+            f"{self.filePath.parents[0]}/decoded/{self.filePath.stem}.{extension}"
+        )
+        output_file.parent.mkdir(exist_ok=True, parents=True)
+
+        img = np.swapaxes(self.imageArray, 0, 1)
+        if not binary:
+            with open(output_file, 'w') as f:
+                if extension == "ppm":
+                    f.write("P3\n")
+                    f.write(f"{self.imageWidth} {self.imageHeight}\n")
+                    f.write("255\n")
+                for i in range(self.imageHeight):
+                    for j in range(self.imageWidth):
+                        line = ""
+                        for k in range(len(img[i, j])):
+                            line += str(img[i, j, k]) + " "
+                        f.write(line + "\n")
+        elif binary:
+            with open(output_file, "wb") as f:
+                if extension == "ppm":
+                    f.write(b"P6\n")
+                    f.write(f"{self.imageWidth} {self.imageHeight}\n".encode())
+                    f.write("255\n".encode())
+                for i in range(self.imageHeight):
+                    for j in range(self.imageWidth):
+                        f.write(bytes(img[i, j]))
+        print(
+            "Output of the decoded image successfully written in the 'decoded' folder."
+        )
+        return
+
 
 class InverseDCT:
     """Perform the inverse cosine discrete transform (IDCT) on a 8 x 8 matrix of DCT coefficients."""
@@ -1097,7 +1130,7 @@ class InverseDCT:
         # Array to store the results
         output = np.zeros(shape=(8, 8), dtype="float64")
 
-        # Summation of the frequecies components
+        # Summation of the frequencies components
         for x, y in self.xy_coordinates:
             output[x, y] = np.sum(block * self.idctTable[x, y, ...], dtype="float64")
 
@@ -1174,8 +1207,10 @@ class UnsupportedJpeg(JpegError):
 
 # Helper functions
 
-def bytesToUint(bytes_obj:bytes):
+
+def bytesToUint(bytes_obj: bytes):
     pass
+
 
 def binTwosComplement(bits: str) -> int:
     """Convert a binary number to a signed integer using the two's complement."""
@@ -1389,4 +1424,7 @@ if __name__ == "__main__":
     #         print("Error - Something went wrong")
     decodedJPEG = JPEGReader(
         "/Users/arsnm/Documents/cpge/mp/tipe_mp/code/data/image.jpg"
+    )
+    decodedJPEG.writeOutput(
+        "ppm", True
     )
