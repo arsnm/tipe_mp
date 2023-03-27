@@ -28,7 +28,7 @@ ColorComponent = namedtuple(
 HuffmanTable = namedtuple("HuffmanTable", "dc ac")
 
 
-class JPEGReader:
+class JpegDecoder:
     def __init__(self, file: Path):
         with open(file, "rb") as image:
             self.__file = image.read()
@@ -719,7 +719,7 @@ class JPEGReader:
                 codeword += nextBits()
                 if len(codeword) > 16:
                     raise CorruptedJpeg(
-                        f"Failed to decode image ({currentMcu}/{self.mcuCount} MCUs decoded)."
+                        f"Error - Failed to decode image ({currentMcu}/{self.mcuCount} MCUs decoded)."
                     )
                 huffmanValue = huffmanTable.get(codeword)
 
@@ -730,7 +730,7 @@ class JPEGReader:
         componentsAmount = len(myColorComponents)
         if (values == "ac") and (componentsAmount > 1):
             raise CorruptedJpeg(
-                "An AC progressive scan can only have a single color component."
+                "Error - An AC progressive scan can only have a single color component."
             )
 
         # DC values scan
@@ -1085,6 +1085,7 @@ class JPEGReader:
                 for i in range(self.imageHeight):
                     for j in range(self.imageWidth):
                         f.write(bytes(img[i, j]))
+                        
         print(
             "Output of the decoded image successfully written in the 'decoded' folder."
         )
@@ -1422,7 +1423,7 @@ if __name__ == "__main__":
     #             print(decodedJPEG)
     #     except:
     #         print("Error - Something went wrong")
-    decodedJPEG = JPEGReader(
+    decodedJPEG = JpegDecoder(
         "/Users/arsnm/Documents/cpge/mp/tipe_mp/code/data/image.jpg"
     )
     decodedJPEG.writeOutput(
