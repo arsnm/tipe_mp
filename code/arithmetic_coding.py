@@ -64,7 +64,6 @@ def inverse(dic):
 
 def decode(n, p, nbr_carac):
     d = inverse(create_int2(p))
-    s = 0.
     res = []
     i = n
     while len(res) < nbr_carac:
@@ -79,10 +78,10 @@ def decode(n, p, nbr_carac):
 
 #Examples
 
-
-print(encode('WIKI'))
-print(decode(0.171875, {'W' : 0.25, 'I' : 0.5, 'K' : 0.25}, 4))
-print(encode('AAABBCCCCC'))
-print(decode(0.010783125000000005,{'A' : 0.3, 'B' : 0.2, 'C' : 0.5}, 10))
-print(encode([1,2,3,4,5,6,7,8,9,10]))
-print(decode(encode([1,2,3,4,5,6,7,8,9,10]), {1 : 0.1, 2 : 0.1, 3 : 0.1, 4 : 0.1, 5 : 0.1, 6 : 0.1, 7 : 0.1, 8 : 0.1, 9 : 0.1, 10 : 0.1},10))
+if __name__ ==  "__main__":
+    print(encode('WIKI'))
+    print(decode(0.171875, {'W' : 0.25, 'I' : 0.5, 'K' : 0.25}, 4))
+    print(encode('AAABBCCCCC'))
+    print(decode(0.010783125000000005,{'A' : 0.3, 'B' : 0.2, 'C' : 0.5}, 10))
+    print(encode([1,2,3,4,5,6,7,8,9,10]))
+    print(decode(encode([1,2,3,4,5,6,7,8,9,10]), {1 : 0.1, 2 : 0.1, 3 : 0.1, 4 : 0.1, 5 : 0.1, 6 : 0.1, 7 : 0.1, 8 : 0.1, 9 : 0.1, 10 : 0.1},10))
