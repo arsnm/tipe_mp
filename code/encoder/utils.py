@@ -72,3 +72,32 @@ def int_to_binstr(n):
 
 def flatten(lst):
     return [item for sublist in lst for item in sublist]
+
+def transform_blocks(matrix):
+    height, width = matrix.shape
+    num_blocks_h = height // 8
+    num_blocks_w = width // 8
+
+    blocks = []
+    for i in range(num_blocks_h + 1):
+        for j in range(num_blocks_w + 1):
+            block = matrix[i*8:(i+1)*8, j*8:(j+1)*8]
+            if block.shape != (8, 8):
+                block_filled = np.zeros(shape=(8,8), dtype=np.uint8)
+                for i in range(8):
+                    for j in range(8):
+                        try:
+                            block_filled[i, j] = block[i, j]
+                        except:
+                            pass
+                block = block_filled
+            if not (np.array_equal(block, np.zeros(shape=(8,8), dtype=np.uint8))):
+                blocks.append(block)
+
+    return blocks
+
+
+if __name__ == "__main__":
+    matrix = np.random.randint(0, 256, size=(64, 81), dtype=np.uint8)
+    blocks = transform_blocks(matrix)
+    print(blocks)
