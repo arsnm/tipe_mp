@@ -13,3 +13,8 @@ def rgb_to_yuv(rgb:tuple) -> tuple:
     u = yuv[1][0] * r + yuv[1][1] * g + yuv[1][2] * b
     v = yuv[2][0] * r + yuv[2][1] * g + yuv[2][2] * b
     return (y,u,v)
+
+def rgb_to_yuv_block(block:list[list[tuple]]) -> list[list[tuple]]:
+    return [[rgb_to_yuv(pixel) for pixel in row] for row in block]
+
+    
