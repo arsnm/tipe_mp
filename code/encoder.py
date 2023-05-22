@@ -1,4 +1,8 @@
-m =[[1,2,3,4,5,6,7,8],[1,2,3,4,5,6,7,8],[1,2,3,4,5,6,7,8],[1,2,3,4,5,6,7,8],[1,2,3,4,5,6,7,8],[1,2,3,4,5,6,7,8],[1,2,3,4,5,6,7,8],[1,2,3,4,5,6,7,8]]
+import numpy as np
+from zigzag import zigzag
+from quantization import quantize
+
+m =np.array([[i*10 for i in range(1,9)] for _ in range(8)])
 
 m2 = [[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]]
 
@@ -14,7 +18,7 @@ def blocs(matrice):
     L=[]
     for i in range(q2):
         for j in range(q1):
-            M = [[0]*8 for i in range(8)]
+            M = [[0]*8 for _ in range(8)]
             for k in range(8):
                 for l in range(8):
                     M[k][l] = matrice[8*i + k][8*j + l]
@@ -38,7 +42,7 @@ def DCT_ligne(lm):
     return(lm)
 
 def transpo(matrice):
-    return(np.transpose(M))
+    return np.transpose(matrice)
 
 def DCT_colonne(lm):
     "applique DCT sur les colonnes d'une liste de matrices en utilisant la transposée et DCT_ligne"
@@ -55,22 +59,18 @@ def DCT_colonne(lm):
     return L
 
 
-def quantization_bidon(m):
-    return m
 
 def quantization_liste_matrice(lm):
     L = []
     for m in lm:
-        L.append(quantization_bidon(m))
+        L.append(quantize(m))
     return L
 
-def zigzag_bidon(m):
-    return([0])
 
 def zigzag_liste_matrice(lm):
     Z = []
     for m in lm:
-        Z.appen(zigzag_bidon(m))
+        Z.append(zigzag(m))
     return Z
 
 
@@ -85,11 +85,4 @@ def encoder(image):
 
 
     
-
-    
-
-
-
-
-
-
+print(encoder(m))
