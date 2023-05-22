@@ -25,7 +25,7 @@ def blocs(matrice):
             L.append(M)
     return L
 
-def moyenne0(matrice):
+def normalize(matrice):
     for i in range(len(m)):
         for j in range(len(m[0])):
             matrice[i][j] -= 128
@@ -76,12 +76,12 @@ def zigzag_liste_matrice(lm):
 
 
 def encoder(image):
-    lm = blocs(image)
+    im = normalize(image)
+    lm = blocs(im)
     lm = DCT_ligne(lm)
     lm = DCT_colonne(lm)
     lm = quantization_liste_matrice(lm)
     return(zigzag_liste_matrice(lm))
-
 
 
     
