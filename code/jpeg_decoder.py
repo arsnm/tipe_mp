@@ -1424,8 +1424,8 @@ if __name__ == "__main__":
     #     except:
     #         print("Error - Something went wrong")
     decodedJPEG = JpegDecoder(
-        "/Users/arsnm/Documents/cpge/mp/tipe_mp/code/data/image.jpg"
+        "/Users/arsnm/Documents/cpge/mp/tipe_mp/code/encoder/data/lena_badQuality.jpg"
     )
     decodedJPEG.writeOutput(
-        "ppm", True
+        "ppm", False
     )

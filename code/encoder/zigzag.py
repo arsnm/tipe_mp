@@ -4,7 +4,7 @@
 import numpy as np
 
 
-def zigzag(matrix):
+def block_to_zigzag(matrix):
     """function that reads the coefficients of a square matrix in zigzag
 
     parameters
@@ -14,33 +14,97 @@ def zigzag(matrix):
     return
     ------
         - list of coefficients read in zigzag"""
-    n = len(matrix)
-    if n != len(matrix[0]):
-        raise ValueError("given parameter must be a square matrix of at least size 1x1")
-    solution = [[] for i in range(n + n - 1)]
-    for i in range(n):
-        for j in range(n):
-            sum = i + j
-            if sum % 2 == 0:
-                # add at beginning
-                solution[sum].insert(0, matrix[i][j])
+    h = 0
+    v = 0
+    v_min = 0
+    h_min = 0
+    v_max = matrix.shape[0]
+    h_max = matrix.shape[1]
+    i = 0
+    output = np.empty((v_max * h_max), dtype=np.uint8)
+
+    while (v < v_max) and (h < h_max):
+        if ((h + v) % 2) == 0:  # going up
+            if v == v_min:
+                output[i] = matrix[v, h]  # first line
+                if h == h_max:
+                    v = v + 1
+                else:
+                    h = h + 1
+                i = i + 1
+            elif (h == h_max - 1) and (v < v_max):  # last column
+                output[i] = matrix[v, h]
+                v = v + 1
+                i = i + 1
+            elif (v > v_min) and (h < h_max - 1):  # all other cases
+                output[i] = matrix[v, h]
+                v = v - 1
+                h = h + 1
+                i = i + 1
+        else:  # going down
+            if (v == v_max - 1) and (h <= h_max - 1):  # last line
+                output[i] = matrix[v, h]
+                h = h + 1
+                i = i + 1
+            elif h == h_min:  # first column
+                output[i] = matrix[v, h]
+                if v == v_max - 1:
+                    h = h + 1
+                else:
+                    v = v + 1
+                i = i + 1
+            elif (v < v_max - 1) and (h > h_min):  # all other cases
+                output[i] = matrix[v, h]
+                v = v + 1
+                h = h - 1
+                i = i + 1
+        if (v == v_max - 1) and (h == h_max - 1):  # bottom right element
+            output[i] = matrix[v, h]
+            break
+    return output
+
+
+
+def zigzag_to_block(zigzag_matrix):
+    rows, cols = zigzag_matrix.shape
+    size = rows * cols
+    output = np.zeros((rows, cols), dtype=zigzag_matrix.dtype)
+    row, col = 0, 0
+    index = 0
+    direction = 1
+
+    while index < size:
+        output[row, col] = zigzag_matrix[index]
+        if row == 0 and col == cols - 1:
+            row += 1
+        elif col == 0 and row == rows - 1:
+            col += 1
+        elif row == 0 or col == cols - 1:
+            if col == cols - 1:
+                row += 1
             else:
-                # add at end of the list
-                solution[sum].append(matrix[i][j])
+                col += 1
+            direction = -direction
+        elif col == 0 or row == rows - 1:
+            if row == rows - 1:
+                col += 1
+            else:
+                row += 1
+            direction = -direction
+        else:
+            row -= direction
+            col += direction
+        index += 1
 
-    return [item for sublist in solution for item in sublist]
-
-
-def zigzag_inverse(matrix):
-    """return the reversed list returned by `zigzag(matrix)`"""
-    return zigzag(matrix)[::-1]
-
-zigzag_point = zigzag([[i + j for j in range(8)] for i in range(0, 64, 8)])
-
-def block_to_zigzag(block):
-    return np.array(block[point] for point in zigzag_point)
+    return output
 
 if __name__ == "__main__":
-    test = [[i + j for j in range(8)] for i in range(0, 64, 8)]
-    print(zigzag(test))
-    print(zigzag_inverse(test))
+    matrix = np.array([[1, 2, 3, 4],
+                   [5, 6, 7, 8],
+                   [9, 10, 11, 12]])
+
+    coefficients = block_to_zigzag(matrix)
+    print(coefficients)
+
+    test = np.array([[i + j for j in range(8)] for i in range(0, 64, 8)])
+    print(block_to_zigzag(test))

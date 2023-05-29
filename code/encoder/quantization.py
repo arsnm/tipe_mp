@@ -20,6 +20,15 @@ def quantize(block, quantiz_matrix=table_quantization):
     block = np.array(block)
     return (block / quantiz_matrix).round().astype(np.int32)
 
+def quantize_b(block, color_channel):
+    if color_channel == "lum":
+        return quantize(block)
+    elif color_channel == "chrom":
+        return quantize(block)
+    else:
+        print('Error - Color Channel specified is not supported')
+
+
 
 if __name__ == "__main__":
     block_test = [
