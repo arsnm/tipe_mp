@@ -5,7 +5,7 @@ from PIL import Image
 from pathlib import Path
 
 from utils import *
-from huffman import *
+from huffman_jpeg import *
 
 
 def padding(im, mh, mw):

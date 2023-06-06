@@ -12,6 +12,9 @@
 \usepackage{adjustbox}
 \usepackage[explicit]{titlesec}
 \usepackage{pdfpages}
+\usepackage{tikz}
+\usepackage{pifont}
+\usepackage{fontawesome5}
 
 \usetheme{Madrid}
 
@@ -41,9 +44,9 @@
 
     \begin{itemize}
         \setlength\itemsep{2em}
-        \item \Large \textbf{Compression} : \textcolor{red}{maximum} d'information avec une taille \textcolor{green}{minimal}
+        \item \Large \textbf{Compression} : \textcolor{red}{maximum} d'informations avec une taille \textcolor{green}{minimal}
         \item Deux types : \textbf{avec} (lossy) ou \textbf{sans} perte (lossless).
-        \item \large Dans le domaine urbain : beaucoup d'information $\rightarrow$ compression $\Rightarrow$ \bfseries stocker et traiter efficacement
+        \item \large Dans le domaine urbain : beaucoup d'informations $\rightarrow$ compression $\Rightarrow$ \bfseries stocker et traiter efficacement
     \end{itemize}
 
 \end{frame}
@@ -101,7 +104,7 @@
         Un code est dit préfixe si \textbf{aucun mot de code n'est le préfixe d'un autre mot} de code
     \end{alertblock}
 
-    \textit{Rq. :} Code \textbf{préfixe} $\implies$ \textbf{code uniquement décodable}
+    \textit{Rq. :} Code \textbf{préfixe} $\implies$ code \textbf{uniquement décodable}
 
     \vspace*{3em}
 
@@ -344,6 +347,9 @@ $l_i =$ longueur des mots du codes
 
     \includegraphics[width=0.8\textwidth]{img/diff_rgb.png}
 
+    \tiny\raggedleft
+    \href{https://a2f6z9k6.rocketcdn.me/wp-content/uploads/2019/11/ville_lyon-scaled.jpg}{Référence Image: \textit{laou.fr}}
+
 \end{frame}
 
 \begin{frame}
@@ -386,8 +392,11 @@ $l_i =$ longueur des mots du codes
         \item Exemples de \textbf{sous-échantillonnages}: 
     \end{itemize}
 
-    \centering
-    \includegraphics[width=0.8\textwidth]{img/chromaSubSampling.png}
+    {\centering
+    \includegraphics[width=0.7\textwidth]{img/chromaSubSampling.png} \\}
+
+    \tiny
+    \href{https://upload.wikimedia.org/wikipedia/commons/f/f2/Common_chroma_subsampling_ratios.svg}{Référence Schéma: \textit{wikipedia.org}}
 
 \end{frame}
 
@@ -429,22 +438,20 @@ $l_i =$ longueur des mots du codes
             \varepsilon \colon \mathcal{M}_{8,8}(\mathbb{Z})^2 & \rightarrow \mathcal{M}_{8,8}(\mathbb{Z})\\
             Q, B & \longmapsto \lfloor B / Q \rfloor
         \end{align*}
-        \item Souvent $Q$ dépend d'un \textbf{facteur de qualité} $q$
+        \item Souvent $Q$ dépend d'un \textbf{facteur de qualité} $q$ (dans notre cas : $q \in \llbracket 1, 100 \rrbracket$)
     \end{itemize}
 
 \end{frame}
 
 \begin{frame}
-    \frametitle{Codage par plages (Run-Length Encoding)}
-
-    \centering
+    \frametitle{Codage par plages (Run-Length Encoding)}    
 
     \begin{itemize}
         \item Tire son avantage des \textbf{répétitions} de symboles  
         \item Exemple : $$\underbrace{AAAA}_{4 \times A} \underbrace{B}_{1 \times B} \underbrace{CCC}_{3 \times C} \underbrace{BBBBBBB}_{7 \times B} \xrightarrow[RLE]{} A4B1C3B7$$
         $15$ caractères $\rightarrow$ $8$ caractères 
-        \item Pour faire apparaître ces répétitions dans les \textbf{images}, lecture de la matrice en \textbf{zigzag}:
-        \includegraphics[width=0.2\textwidth]{img/zigzag.png}
+        \item Pour faire apparaître ces répétitions dans les \textbf{images}, lecture de la matrice en \textbf{zigzag}: \\
+        \centering\includegraphics[width=0.2\textwidth]{img/zigzag.png}
     \end{itemize}
 
 \end{frame}
@@ -494,53 +501,93 @@ $l_i =$ longueur des mots du codes
 \begin{frame}
     \frametitle{Comparaison (1)}
 
-    
+    \centering
+    \includegraphics[width=\textwidth]{img/compressionComparaison.png} \\
+    \textbf{Conclusion} : JPEG \textbf{plus efficace} lorsque la \textbf{qualité baisse} 
 
 \end{frame}
 
 \begin{frame}
     \frametitle{Comparaison (2)}
 
-    
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/compressionComparaison2.png} \\
+    \textbf{Conclusion} : Le \textbf{gain en espace} est proportionnellement \textbf{inférieure} au \textbf{gain en temps}
 
 \end{frame}
+
+\begin{frame}
+    \frametitle{Effectué}
+
+    \begin{itemize}
+        \item[\checkmark] \textbf{\'Etude théorique} des moyens de compression
+        \item[\checkmark] \textbf{Implémentation} des méthodes de compression en \textbf{python} \faPython
+        \item[\checkmark] \textbf{Implémentation} d'un encoder JPEG utilisant le \textbf{codage de Huffman} en \textbf{python} \faPython
+        \item[$\times$]  \textbf{Implémentation} d'un encoder JPEG utilisant le \textbf{codage arithmétique} en \textbf{python} \faPython
+        \item[$\sim$] Comparaison des méthodes de compression sur des images
+            \begin{itemize}
+                \item[\checkmark] Comparaison en fonction du \textbf{facteur de qualité}
+                \item[\checkmark] Comparaison en fonction du \textbf{codage de Huffman}
+                \item[$\times$] Comparaison en fonction du \textbf{codage entropique} (Huffman ou Arithmétique)  
+            \end{itemize}
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Annexe - Démonstration Inégalité de Kraft (1)}
+
+    \small
+    Pour toute la démonstration, on considère un codage $h$ ayant la propriété du préfixe. Soit $s_1, \dots , s_k$ et $l_1, \dots , l_k$ les mots codes et leur
+    longueur. \\
+    On considère le cas où la taille de l'alphabet $D = 2$ (binaire), l'inégalité de Kraft s'écrit donc :
+    $$ \sum_{i = 1}^{k} 2^{-l_i} \leqslant 1$$
+    On note $m = \max l_i$ la plus grande longueur des mots codes. Comme le code a la propriété du préfixe, on
+    peut placer, de manière unique, ces mots codes sur un arbre $\mathcal{T}$ binaire équilibré de profondeur $m$ chaque mot code étant une feuille de cet arbre.
+    \\
+    On peut donc compter le nombre de feuilles issues du mot de code $s_i$ dans l'arbre complet binaire $\mathcal{T}$ de profondeur $m$
+    Comme le mot code est à la profondeur $l_i$, le n\oe{ud} correspondant est le père de $2^{m - l_i}$ feuilles à la profondeur $m$. \\
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Annexe - Démonstration Inégalité de Kraft (2)}
+
+    \small
+    Comme le codage a la propriété du préfixe les sous arbres issus des mots codes sont disjoints et donc le nombre
+    total de feuilles issues des mots codes à la profondeur $m$ est égal à
+    $$\sum_{i = 1}^{k} 2^{m-l_i}$$
+    Ce nombre de feuilles est inférieur ou égal au nombre total de feuilles à la profondeur $m$, c’est à dire à $2^m$. En écrivant cette inégalité on obtient : 
+    $$\sum_{i = 1}^{k} 2^{m-l_i} \leqslant 2^m \implies \sum_{i = 1}^{k} 2^{-l_i} \leqslant 1$$
+
+    \vspace*{2em}
+
+    La réciproque se montre en partant de l'arbre complet de profondeur $m$ et en construisant le code à partir des $l_i$.
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Annexe - Listing Programmation}
+
+    \begin{itemize}
+        \item ycbcr.py $\rightarrow$ slides 31-32
+        \item huffman.py $\rightarrow$ slides 32-34
+        \item fft.py $\rightarrow$ slides 35-38
+        \item complex.py $\rightarrow$ slides 38-43
+        \item arithmetic\_coding.py $\rightarrow$ slides 43-46
+        \item utils.py $\rightarrow$ slides 43-58
+        \item huffman\_jpeg.py $\rightarrow$ slides 58-72
+        \item encoder.py $\rightarrow$ slides 72-79
+        \item comparator.py $\rightarrow$ slides 79-88
+    \end{itemize}
+
+\end{frame}
+
 {
 \setbeamercolor{background canvas}{bg=}
-\includepdf[pages=1]{img/code/utils.py_compressed.pdf}
-\includepdf[pages=2]{img/code/utils.py_compressed.pdf}
-\includepdf[pages=3]{img/code/utils.py_compressed.pdf}
-\includepdf[pages=4]{img/code/utils.py_compressed.pdf}
-\includepdf[pages=5]{img/code/utils.py_compressed.pdf}
-\includepdf[pages=6]{img/code/utils.py_compressed.pdf}
-\includepdf[pages=7]{img/code/utils.py_compressed.pdf}
-\includepdf[pages=8]{img/code/utils.py_compressed.pdf}
-\includepdf[pages=9]{img/code/utils.py_compressed.pdf}
-\includepdf[pages=1]{img/code/huffman.py_compressed.pdf}
-\includepdf[pages=2]{img/code/huffman.py_compressed.pdf}
-\includepdf[pages=3]{img/code/huffman.py_compressed.pdf}
-\includepdf[pages=4]{img/code/huffman.py_compressed.pdf}
-\includepdf[pages=5]{img/code/huffman.py_compressed.pdf}
-\includepdf[pages=6]{img/code/huffman.py_compressed.pdf}
-\includepdf[pages=7]{img/code/huffman.py_compressed.pdf}
-\includepdf[pages=8]{img/code/huffman.py_compressed.pdf}
-\includepdf[pages=9]{img/code/huffman.py_compressed.pdf}
-\includepdf[pages=10]{img/code/huffman.py_compressed.pdf}
-\includepdf[pages=11]{img/code/huffman.py_compressed.pdf}
-\includepdf[pages=12]{img/code/huffman.py_compressed.pdf}
-\includepdf[pages=1]{img/code/encoder.py_compressed.pdf}
-\includepdf[pages=2]{img/code/encoder.py_compressed.pdf}
-\includepdf[pages=3]{img/code/encoder.py_compressed.pdf}
-\includepdf[pages=4]{img/code/encoder.py_compressed.pdf}
-\includepdf[pages=5]{img/code/encoder.py_compressed.pdf}
-\includepdf[pages=6]{img/code/encoder.py_compressed.pdf}
-\includepdf[pages=7]{img/code/encoder.py_compressed.pdf}
-\includepdf[pages=8]{img/code/encoder.py_compressed.pdf}
-\includepdf[pages=1]{img/code/comparator.py_compressed.pdf}
-\includepdf[pages=2]{img/code/comparator.py_compressed.pdf}
-\includepdf[pages=3]{img/code/comparator.py_compressed.pdf}
-\includepdf[pages=4]{img/code/comparator.py_compressed.pdf}
-\includepdf[pages=5]{img/code/comparator.py_compressed.pdf}
-\includepdf[pages=6]{img/code/comparator.py_compressed.pdf}
+\foreach \n in{1,...,58}  {
+\includepdf[pages=\n]{img/code/allCodeLandscape_compressed.pdf}
+}
 }
 
 \end{document}

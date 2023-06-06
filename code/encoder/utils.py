@@ -9,15 +9,15 @@ BH, BW = 8, 8
 
 
 class MARKER:
-    SOI = b'\xff\xd8'
-    APP0 = b'\xff\xe0'
-    APPn = (b'\xff\xe1', b'\xff\xef')  # n=1~15
-    DQT = b'\xff\xdb'
-    SOF0 = b'\xff\xc0'
-    DHT = b'\xff\xc4'
-    DRI = b'\xff\xdd'
-    SOS = b'\xff\xda'
-    EOI = b'\xff\xd9'
+    SOI = b"\xff\xd8"
+    APP0 = b"\xff\xe0"
+    APPn = (b"\xff\xe1", b"\xff\xef")  # n=1~15
+    DQT = b"\xff\xdb"
+    SOF0 = b"\xff\xc0"
+    DHT = b"\xff\xc4"
+    DRI = b"\xff\xdd"
+    SOS = b"\xff\xda"
+    EOI = b"\xff\xd9"
 
 
 class ComponentInfo:
@@ -34,28 +34,34 @@ class ComponentInfo:
         return cls.__init__(*[0 for _ in range(6)])
 
     def encode_SOS_info(self):
-        return int2bytes(self.id_, 1) + \
-               int2bytes((self.dc_ht_id << 4) + self.ac_ht_id, 1)
+        return int2bytes(self.id_, 1) + int2bytes(
+            (self.dc_ht_id << 4) + self.ac_ht_id, 1
+        )
 
     def encode_SOF0_info(self):
-        return int2bytes(self.id_, 1) + \
-               int2bytes((self.horizontal << 4) + self.vertical, 1) + \
-               int2bytes(self.qt_id, 1)
+        return (
+            int2bytes(self.id_, 1)
+            + int2bytes((self.horizontal << 4) + self.vertical, 1)
+            + int2bytes(self.qt_id, 1)
+        )
 
     def __repr__(self):
-        return f'{self.id_}: qt-{self.qt_id}, ht-(dc-{self.dc_ht_id}, ' \
-               f'ac-{self.ac_ht_id}), sample-{self.vertical, self.horizontal} '
+        return (
+            f"{self.id_}: qt-{self.qt_id}, ht-(dc-{self.dc_ht_id}, "
+            f"ac-{self.ac_ht_id}), sample-{self.vertical, self.horizontal} "
+        )
 
 
 class BitStreamReader:
     """simulate bitwise read"""
+
     def __init__(self, bytes_: bytes):
         self.bits = np.unpackbits(np.frombuffer(bytes_, dtype=np.uint8))
         self.index = 0
 
     def read_bit(self):
         if self.index >= self.bits.size:
-            raise EOFError('Ran out of element')
+            raise EOFError("Ran out of element")
         self.index += 1
         return self.bits[self.index - 1]
 
@@ -66,11 +72,12 @@ class BitStreamReader:
         return result
 
     def __repr__(self):
-        return f'[{self.index}, {self.bits.size}]'
+        return f"[{self.index}, {self.bits.size}]"
 
 
 class BitStreamWriter:
     """simulate bitwise write"""
+
     def __init__(self, length=10000):
         self.index = 0
         self.bits = np.zeros(length, dtype=np.uint8)
@@ -79,38 +86,37 @@ class BitStreamWriter:
         length = len(bitstring)
         if length + self.index > self.bits.size * 8:
             arr = np.zeros((length + self.index) // 8 * 2, dtype=np.uint8)
-            arr[:self.bits.size] = self.bits
+            arr[: self.bits.size] = self.bits
             self.bits = arr
         for bit in bitstring:
             self.bits[self.index // 8] |= int(bit) << (7 - self.index % 8)
             self.index += 1
 
     def to_bytes(self):
-        return self.bits[:math.ceil(self.index / 8)].tobytes()
+        return self.bits[: math.ceil(self.index / 8)].tobytes()
 
     def to_hex(self):
         length = math.ceil(self.index / 8) * 8
         for i in range(self.index, length):
             self.bits[i] = 1
         bytes_ = np.packbits(self.bits[:length])
-        return ' '.join(f'{b:2x}' for b in bytes_)
+        return " ".join(f"{b:2x}" for b in bytes_)
 
 
 class BytesWriter(BytesIO):
-
     def __init__(self, *args, **kwargs):
         super(BytesWriter, self).__init__(*args, **kwargs)
 
     def add_bytes(self, *args):
-        self.write(b''.join(args))
+        self.write(b"".join(args))
 
 
-def bytes2int(bytes_, byteorder='big'):
+def bytes2int(bytes_, byteorder="big"):
     return int.from_bytes(bytes_, byteorder)
 
 
 def int2bytes(int_: int, length):
-    return int_.to_bytes(length, byteorder='big')
+    return int_.to_bytes(length, byteorder="big")
 
 
 def decode_2s_complement(complement, length) -> int:
@@ -126,7 +132,7 @@ def decode_2s_complement(complement, length) -> int:
 def encode_2s_complement(number) -> str:
     """return the 2's complement representation as string"""
     if number == 0:
-        return ''
+        return ""
     if number > 0:
         complement = bin(number)[2:]
     else:
@@ -138,34 +144,157 @@ def encode_2s_complement(number) -> str:
 def load_quantization_table(quality, component):
     # the below two tables was processed by zigzag encoding
     # in JPEG bit stream, the table is also stored in this order
-    if component == 'lum':
-        q = np.array([
-            16,  11,  12,  14,  12,  10,  16,  14,
-            13,  14,  18,  17,  16,  19,  24,  40,
-            26,  24,  22,  22,  24,  49,  35,  37,
-            29,  40,  58,  51,  61,  60,  57,  51,
-            56,  55,  64,  72,  92,  78,  64,  68,
-            87,  69,  55,  56,  80, 109,  81,  87,
-            95,  98, 103, 104, 103,  62,  77, 113,
-            121, 112, 100, 120,  92, 101, 103, 99], dtype=np.int32)
-    elif component == 'chr':
-        q = np.array([
-            17, 18, 18, 24, 21, 24, 47, 26,
-            26, 47, 99, 66, 56, 66, 99, 99,
-            99, 99, 99, 99, 99, 99, 99, 99,
-            99, 99, 99, 99, 99, 99, 99, 99,
-            99, 99, 99, 99, 99, 99, 99, 99,
-            99, 99, 99, 99, 99, 99, 99, 99,
-            99, 99, 99, 99, 99, 99, 99, 99,
-            99, 99, 99, 99, 99, 99, 99, 99], dtype=np.int32)
+    if component == "lum":
+        q = np.array(
+            [
+                16,
+                11,
+                12,
+                14,
+                12,
+                10,
+                16,
+                14,
+                13,
+                14,
+                18,
+                17,
+                16,
+                19,
+                24,
+                40,
+                26,
+                24,
+                22,
+                22,
+                24,
+                49,
+                35,
+                37,
+                29,
+                40,
+                58,
+                51,
+                61,
+                60,
+                57,
+                51,
+                56,
+                55,
+                64,
+                72,
+                92,
+                78,
+                64,
+                68,
+                87,
+                69,
+                55,
+                56,
+                80,
+                109,
+                81,
+                87,
+                95,
+                98,
+                103,
+                104,
+                103,
+                62,
+                77,
+                113,
+                121,
+                112,
+                100,
+                120,
+                92,
+                101,
+                103,
+                99,
+            ],
+            dtype=np.int32,
+        )
+    elif component == "chr":
+        q = np.array(
+            [
+                17,
+                18,
+                18,
+                24,
+                21,
+                24,
+                47,
+                26,
+                26,
+                47,
+                99,
+                66,
+                56,
+                66,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+                99,
+            ],
+            dtype=np.int32,
+        )
     else:
-        raise ValueError((
-            f"component should be either 'lum' or 'chr', "
-            f"but '{component}' was found."))
+        raise ValueError(
+            (
+                f"component should be either 'lum' or 'chr', "
+                f"but '{component}' was found."
+            )
+        )
     if 0 < quality < 50:
-        q = np.minimum(np.floor(50/quality * q + 0.5), 255)
+        q = np.minimum(np.floor(50 / quality * q + 0.5), 255)
     elif 50 <= quality <= 100:
-        q = np.maximum(np.floor((2 - quality/50) * q + 0.5), 1)
+        q = np.maximum(np.floor((2 - quality / 50) * q + 0.5), 1)
     else:
         raise ValueError("quality should belong to (0, 100].")
     return q.astype(np.int32)
@@ -181,7 +310,7 @@ def zigzag_points(rows, cols):
         LEFT: lambda p: (p[0], p[1] - 1),
         RIGHT: lambda p: (p[0], p[1] + 1),
         UP_RIGHT: lambda p: move(UP, move(RIGHT, p)),
-        DOWN_LEFT: lambda p: move(DOWN, move(LEFT, p))
+        DOWN_LEFT: lambda p: move(DOWN, move(LEFT, p)),
     }
 
     # move the point in different directions
@@ -261,43 +390,6 @@ def YCbCr2RGB(im):
     """
     return im
 
-def load_quantization_table(component):
-    # Quantization Table for: Photoshop - (Save For Web 080)
-    # (http://www.impulseadventure.com/photo/jpeg-quantization.html)
-    if component == "lum":
-        q = np.array(
-            [
-                [2, 2, 2, 2, 3, 4, 5, 6],
-                [2, 2, 2, 2, 3, 4, 5, 6],
-                [2, 2, 2, 2, 4, 5, 7, 9],
-                [2, 2, 2, 4, 5, 7, 9, 12],
-                [3, 3, 4, 5, 8, 10, 12, 12],
-                [4, 4, 5, 7, 10, 12, 12, 12],
-                [5, 5, 7, 9, 12, 12, 12, 12],
-                [6, 6, 9, 12, 12, 12, 12, 12],
-            ]
-        )
-    elif component == "chrom":
-        q = np.array(
-            [
-                [3, 3, 5, 9, 13, 15, 15, 15],
-                [3, 4, 6, 11, 14, 12, 12, 12],
-                [5, 6, 9, 14, 12, 12, 12, 12],
-                [9, 11, 14, 12, 12, 12, 12, 12],
-                [13, 14, 12, 12, 12, 12, 12, 12],
-                [15, 12, 12, 12, 12, 12, 12, 12],
-                [15, 12, 12, 12, 12, 12, 12, 12],
-                [15, 12, 12, 12, 12, 12, 12, 12],
-            ]
-        )
-    else:
-        raise ValueError(
-            (
-                "component should be either 'lum' or 'chrom', " "but '{comp}' was found"
-            ).format(comp=component)
-        )
-
-    return q
 
 def bits_required(n):
     n = abs(n)
@@ -307,87 +399,31 @@ def bits_required(n):
         result += 1
     return result
 
+
 def divide_blocks(im, mh, mw):
     h, w = im.shape[:2]
-    return im.reshape(h//mh, mh, w//mw, mw).swapaxes(1, 2).reshape(-1, mh, mw)
+    return im.reshape(h // mh, mh, w // mw, mw).swapaxes(1, 2).reshape(-1, mh, mw)
 
 
 def restore_image(block, nh, nw):
     bh, bw = block.shape[1:]
-    return block.reshape(nh, nw, bh, bw).swapaxes(1, 2).reshape(nh*bh, nw*bw)
+    return block.reshape(nh, nw, bh, bw).swapaxes(1, 2).reshape(nh * bh, nw * bw)
 
 
 def flatten(lst):
     return [item for sublist in lst for item in sublist]
 
-def averageMatrix(arrayMatrix): # given an array of 2D-array, return the average (coef by coef) 2D array 
+
+def averageMatrix(
+    arrayMatrix,
+):  # given an array of 2D-array, return the average (coef by coef) 2D array
     avgMatrix = np.zeros_like(arrayMatrix[0])
     for i in range(avgMatrix.shape[0]):
         for j in range(avgMatrix.shape[1]):
             avgMatrix[i, j] = np.average(arrayMatrix[:, i, j])
     return avgMatrix
 
-def main():
-    pass
-
-
-if __name__ == '__main__':
-    main()
-    arrMatrix = np.array([[[1, 2],
-                           [3, 4]],
-                           [[5, 2],
-                           [3, 4]]])
-    print(averageMatrix(arrMatrix))
-=======
-def binstr_flip(binstr):
-    # check if binstr is a binary string
-    if not set(binstr).issubset("01"):
-        raise ValueError("binstr should have only '0's and '1's")
-    return "".join(map(lambda c: "0" if c == "1" else "1", binstr))
-
-
-def uint_to_binstr(number, size):
-    return bin(number)[2:][-size:].zfill(size)
-
-
-def int_to_binstr(n):
-    if n == 0:
-        return ""
-
-    binstr = bin(abs(n))[2:]
-
-    # change every 0 to 1 and vice versa when n is negative
-    return binstr if n > 0 else binstr_flip(binstr)
-
-
-def flatten(lst):
-    return [item for sublist in lst for item in sublist]
-
-def transform_blocks(matrix):
-    height, width = matrix.shape
-    num_blocks_h = height // 8
-    num_blocks_w = width // 8
-
-    blocks = []
-    for i in range(num_blocks_h + 1):
-        for j in range(num_blocks_w + 1):
-            block = matrix[i*8:(i+1)*8, j*8:(j+1)*8]
-            if block.shape != (8, 8):
-                block_filled = np.zeros(shape=(8,8), dtype=np.uint8)
-                for i in range(8):
-                    for j in range(8):
-                        try:
-                            block_filled[i, j] = block[i, j]
-                        except:
-                            pass
-                block = block_filled
-            if not (np.array_equal(block, np.zeros(shape=(8,8), dtype=np.uint8))):
-                blocks.append(block)
-
-    return blocks
-
 
 if __name__ == "__main__":
-    matrix = np.random.randint(0, 256, size=(64, 81), dtype=np.uint8)
-    blocks = transform_blocks(matrix)
-    print(blocks)
+    arrMatrix = np.array([[[1, 2], [3, 4]], [[5, 2], [3, 4]]])
+    print(averageMatrix(arrMatrix))

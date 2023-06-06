@@ -1065,7 +1065,7 @@ class JpegDecoder:
 
         img = np.swapaxes(self.imageArray, 0, 1)
         if not binary:
-            with open(output_file, 'w') as f:
+            with open(output_file, "w") as f:
                 if extension == "ppm":
                     f.write("P3\n")
                     f.write(f"{self.imageWidth} {self.imageHeight}\n")
@@ -1085,7 +1085,7 @@ class JpegDecoder:
                 for i in range(self.imageHeight):
                     for j in range(self.imageWidth):
                         f.write(bytes(img[i, j]))
-                        
+
         print(
             "Output of the decoded image successfully written in the 'decoded' folder."
         )
@@ -1424,8 +1424,6 @@ if __name__ == "__main__":
     #     except:
     #         print("Error - Something went wrong")
     decodedJPEG = JpegDecoder(
-        "/Users/arsnm/Documents/cpge/mp/tipe_mp/code/encoder/data/villeLyonLossLess.jpg
+        "/Users/arsnm/Documents/cpge/mp/tipe_mp/code/encoder/data/villeLyonLossLess.jpg"
     )
-    decodedJPEG.writeOutput(
-        "ppm", True
-    )
+    decodedJPEG.writeOutput("ppm", True)

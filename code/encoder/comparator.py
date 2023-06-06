@@ -13,7 +13,7 @@ from encoder import DCT, padding
 from scipy.fftpack import dct
 import random as rd
 
-LIM = 2 # number of files to test to
+LIM = 2  # number of files to test to
 
 
 def compare(
@@ -33,8 +33,9 @@ def compare(
     if useStdHuffmanTable is None:
         useStdHuffmanTable = [False]
     stat = np.zeros(
-                    (LIM * len(qualities) * len(subsamples) * len(useStdHuffmanTable), 6), dtype=object
-                )  # dim 0 : quality factor, dim 1 : subsample method, dim 2 : usage of std Hf Tables, dim 3 : size before compression, dim 4 : size after compression, dim 5 : time to compress
+        (LIM * len(qualities) * len(subsamples) * len(useStdHuffmanTable), 6),
+        dtype=object,
+    )  # dim 0 : quality factor, dim 1 : subsample method, dim 2 : usage of std Hf Tables, dim 3 : size before compression, dim 4 : size after compression, dim 5 : time to compress
     i = 0
     i_max = LIM * len(qualities) * len(subsamples) * len(useStdHuffmanTable)
     filesTreated = rd.choices(os.listdir(dataDirectory), k=LIM)
@@ -63,7 +64,7 @@ def compare(
                         stat[i][4] = newSize
                         stat[i][5] = time
                     i += 1
-                    print(f'{i}/{i_max}', end='\r')
+                    print(f"{i}/{i_max}", end="\r")
                 if DeleteFilesAfterward:
                     shutil.rmtree(outputDirectory)
     return stat
@@ -102,6 +103,124 @@ def write_stat_csv(output, stat):
                 "time",
             ],
         )
+
+
+def csv_to_stat(csvFile):
+    stat = pd.read_csv(csvFile)
+    return stat
+
+
+def dataInterpreation(dataFrame):
+    df = dataFrame
+    qualities = df["quality"].unique()
+    qualitySize = {}
+    qualityTime = {}
+    for quality in qualities:
+        qualitySize[quality] = int(df[df["quality"] == quality]["newSize"].mean())
+        qualityTime[quality] = round(df[df["quality"] == quality]["time"].mean(), 3)
+    stdSize = int(df[df["stdHuffmanTables"] == True]["newSize"].mean())
+    stdTime = round(df[df["stdHuffmanTables"] == True]["time"].mean(), 3)
+    nonStdSize = int(df[df["stdHuffmanTables"] == False]["newSize"].mean())
+    nonStdTime = round(df[df["stdHuffmanTables"] == False]["time"].mean(), 3)
+
+    plt.rcParams["figure.figsize"] = [10, 5]
+
+    fig, (ax1, ax3) = plt.subplots(1, 2)
+    ax2 = ax1.twinx()
+
+    fig.suptitle("Comparaison des compressions en fonction du facteur de qualité")
+
+    width = 0.25
+
+    initialSize = 786486
+    xaxis = list(qualitySize.keys())
+    yaxisSize = np.array(list(qualitySize.values()))
+    yaxisTime = np.array(list(qualityTime.values()))
+    yaxisRatio = (initialSize - yaxisSize) / yaxisTime
+
+    color1 = "tab:red"
+    color2 = "tab:blue"
+    color3 = "tab:green"
+
+    ax1.bar(
+        np.arange(len(qualitySize)) - width,
+        yaxisSize,
+        width,
+        tick_label=xaxis,
+        color=color1,
+        label="Taille après compression",
+    )
+    ax2.bar(
+        np.arange(len(qualityTime)),
+        yaxisTime,
+        width,
+        tick_label=xaxis,
+        color=color2,
+        label="Temps de compression",
+    )
+    ax3.bar(
+        np.arange(len(qualitySize)),
+        yaxisRatio,
+        width,
+        tick_label=xaxis,
+        color=color3,
+        label="Octets gagnés par seconde",
+    )
+
+    ax1.legend(loc="upper left")
+    ax2.legend(loc="upper left", bbox_to_anchor=(0, 0.9))
+    ax3.legend(loc="upper right")
+
+    ax3.yaxis.tick_right()
+
+    ax1.set_xlabel("Facteur de qualité")
+    ax1.set_ylabel("Taille (en octets)", color=color1)
+    ax2.set_ylabel("Temps (en secondes)", color=color2)
+    ax3.set_xlabel("Facteur de qualité")
+    ax3.set_ylabel("Taille gagné par unité de temps (octets.Hz)", color=color3)
+    ax3.yaxis.set_label_position("right")
+
+    plt.savefig("./data/treated/compressionComparaison", transparent=True)
+
+    plt.rcParams["figure.figsize"] = [7, 5]
+    plt.clf()
+
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+    ax2 = ax1.twinx()
+
+    fig.suptitle(
+        "Comparaison des compressions en fonction des tables de Huffman utilisées"
+    )
+
+    yaxisSize = [stdSize, nonStdSize]
+    yaxisTime = [stdTime, nonStdTime]
+
+    labels = ["Tables Standards", "Tables Optimales"]
+    ax1.bar(
+        np.arange(2) - width / 2,
+        yaxisSize,
+        width,
+        tick_label=labels,
+        color=color1,
+        label="Taille après compression",
+    )
+    ax2.bar(
+        np.arange(2) + width / 2,
+        yaxisTime,
+        width,
+        tick_label=labels,
+        color=color2,
+        label="Temps de compression",
+    )
+
+    ax1.legend(loc="upper center", bbox_to_anchor=(0.45, 1))
+    ax2.legend(loc="upper center", bbox_to_anchor=(0.45, 0.9))
+
+    ax1.set_ylabel("Taille (en octets)", color=color1)
+    ax2.set_ylabel("Temps (en secondes)", color=color2)
+
+    plt.savefig("./data/treated/compressionComparaison2", transparent=True)
 
 
 def energyCompaction(imgPath):
@@ -188,7 +307,7 @@ def rgbToYCbCr_channel_bis():
 if __name__ == "__main__":
     # compare()
     # rgbToYCbCr_channel_bis()
-    energyCompaction("./data/villeLyon.jpg")
+    # energyCompaction("./data/villeLyon.jpg")
     # test = np.array([[93, 90, 83, 68, 61, 61, 46, 21],
     #                 [102, 92, 95, 77, 65, 60, 49, 32],
     #                 [69, 55, 47, 57, 65, 60, 72, 65],
@@ -201,3 +320,5 @@ if __name__ == "__main__":
 
     # stat = compare(qualities = list(range(1, 101, 10)), subsamples=['4:4:4', '4:2:0', '4:1:1', '4:2:2'], useStdHuffmanTable=[True, False], DeleteFilesAfterward=True)
     # write_stat_csv("./data/treated/stat.csv", stat)
+    stat = csv_to_stat("./data/treated/stat.csv")
+    dataInterpreation(stat)
