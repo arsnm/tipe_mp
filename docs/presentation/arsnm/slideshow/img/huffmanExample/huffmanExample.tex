@@ -1,0 +1,29 @@
+\documentclass{standalone}
+
+\usepackage{xcolor}
+\definecolor{blendedblue}{HTML}{3294A8}
+
+\usepackage[edges]{forest}
+\tikzset{iv/.style={draw,fill=blendedblue,circle,minimum size=20pt,inner
+sep=0pt,text=black},ev/.style={draw,fill=red!50,rectangle,minimum
+size=20pt,inner sep=5pt,text=black}}
+\begin{document}
+\begin{forest}
+for tree={where n children={0}{ev}{iv},l+=8mm,
+% from https://tex.stackexchange.com/a/304002/121799
+if n=1{edge label={node [midway, left] {0} } }{edge label={node [midway, right] {1} } },}
+[9
+ [4
+  [2
+    [V(1)]
+    [I(1)] 
+    ] 
+  [S(2)] 
+   ]
+ [5
+  [E(2)]
+  [L(3)]
+ ] 
+] 
+\end{forest}
+\end{document}

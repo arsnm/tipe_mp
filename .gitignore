@@ -5,6 +5,8 @@ __pycache__
 test.py
 .pytest_cache
 data
+*.ai
+*.pptx
 
 decoded
 

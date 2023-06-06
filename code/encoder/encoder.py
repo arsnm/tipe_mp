@@ -245,9 +245,8 @@ def write_jpeg(filename, im, quality=95, subsample="4:2:0", use_rm_ht=True):
 
 
 def main():
-    im = Image.open("./data/decoded/image.ppm")
-    write_jpeg("data/image.jpg", np.array(im), 5, "4:2:2", False)
-    im.save("data/color-pillow.jpg", subsampling="4:2:2", quality=95)
+    im = Image.open("./data/villeLyon.jpg")
+    write_jpeg("data/villeLyonLow.jpg", np.array(im), 5, "4:1:1", False)
 
 
 if __name__ == "__main__":

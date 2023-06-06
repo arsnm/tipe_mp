@@ -284,6 +284,12 @@ def restore_image(block, nh, nw):
 def flatten(lst):
     return [item for sublist in lst for item in sublist]
 
+def averageMatrix(arrayMatrix): # given an array of 2D-array, return the average (coef by coef) 2D array 
+    avgMatrix = np.zeros_like(arrayMatrix[0])
+    for i in range(avgMatrix.shape[0]):
+        for j in range(avgMatrix.shape[1]):
+            avgMatrix[i, j] = np.average(arrayMatrix[:, i, j])
+    return avgMatrix
 
 def main():
     pass
@@ -291,3 +297,8 @@ def main():
 
 if __name__ == '__main__':
     main()
+    arrMatrix = np.array([[[1, 2],
+                           [3, 4]],
+                           [[5, 2],
+                           [3, 4]]])
+    print(averageMatrix(arrMatrix))
