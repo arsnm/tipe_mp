@@ -163,7 +163,7 @@ $l_i =$ longueur des mots du codes
 
             \begin{itemize}
                 \item Codage \textbf{optimal} au niveau \textbf{symbole}, à longueur \textbf{variable}
-                \item Impose un \textbf{nombre entier de bit} pour un symbole
+                \item Impose un \textbf{nombre entier de bits} pour un symbole
                 \item Exemple de codage de \\ "LES VILLES" :
             \end{itemize}
 
@@ -411,7 +411,7 @@ $l_i =$ longueur des mots du codes
         \end{align*}
         On peut rendre la matrice associée à $\psi$ \textbf{orthogonale} en multipliant le terme $X_0$ par $\frac{1}{\sqrt{N}}$ et toute la matrice par $\sqrt{2/N}$.
     \end{block}
-    2D-DCT $\rightarrow$ $\psi$ sur chaque lignes puis chaque colonne
+    2D-DCT $\rightarrow$ $\psi$ sur chaque ligne puis chaque colonne
 \end{frame}
 
 \begin{frame}
@@ -460,7 +460,7 @@ $l_i =$ longueur des mots du codes
     \frametitle{Exemple de Compression}
 
     \centering
-    Image Original \\
+    Image Originale \\
     \includegraphics[width = 0.8\textwidth]{img/villeLyon.jpg} \\
     Taille : 10,3 Mo
 \end{frame}
@@ -562,23 +562,32 @@ $l_i =$ longueur des mots du codes
 
     \vspace*{2em}
 
-    La réciproque se montre en partant de l'arbre complet de profondeur $m$ et en construisant le code à partir des $l_i$.
+    La réciproque se montre en partant de l'arbre complet de profondeur $m$ et en construisant les mots codes à partir des $l_i$.
 
+\end{frame}
+
+\begin{frame}
+    \frametitle{Annexe - Exemple Matrice de Quantification}
+
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/typicalQuantazationMatrix.png}
+    \raggedleft\tiny
+    \href{https://www.researchgate.net/profile/Sanjeeb-Dash/publication/7019577/figure/fig2/AS:601713178320896@1520471009224/Examples-of-JPEG-quantization-tables-for-8-2-8-DCT-blocks-The-resulting-YCbCr-space-is.png}{Référence Image: \textit{researchgate.net}}
 \end{frame}
 
 \begin{frame}
     \frametitle{Annexe - Listing Programmation}
 
     \begin{itemize}
-        \item ycbcr.py $\rightarrow$ slides 31-32
-        \item huffman.py $\rightarrow$ slides 32-34
-        \item fft.py $\rightarrow$ slides 35-38
-        \item complex.py $\rightarrow$ slides 38-43
-        \item arithmetic\_coding.py $\rightarrow$ slides 43-46
-        \item utils.py $\rightarrow$ slides 43-58
-        \item huffman\_jpeg.py $\rightarrow$ slides 58-72
-        \item encoder.py $\rightarrow$ slides 72-79
-        \item comparator.py $\rightarrow$ slides 79-88
+        \item ycbcr.py $\rightarrow$ slides 32-33
+        \item huffman.py $\rightarrow$ slides 33-35
+        \item fft.py $\rightarrow$ slides 36-39
+        \item complex.py $\rightarrow$ slides 39-44
+        \item arithmetic\_coding.py $\rightarrow$ slides 44-47
+        \item utils.py $\rightarrow$ slides 47-59
+        \item huffman\_jpeg.py $\rightarrow$ slides 59-73
+        \item encoder.py $\rightarrow$ slides 73-80
+        \item comparator.py $\rightarrow$ slides 80-89
     \end{itemize}
 
 \end{frame}
