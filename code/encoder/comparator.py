@@ -11,54 +11,62 @@ import utils
 import matplotlib.pyplot as plt
 from encoder import DCT, padding
 from scipy.fftpack import dct
+import random as rd
 
-LIM = 25  # number of files to test to
+LIM = 2 # number of files to test to
 
 
 def compare(
-    quality=None,
+    qualities=None,
     dataDirectory=None,
     outputDirectory=None,
-    subsample=None,
+    subsamples=None,
     useStdHuffmanTable=None,
     DeleteFilesAfterward=True,
 ):
-    if quality is None:
-        quality = np.random.randint(0, 101)
-    if subsample is None:
-        subsample = "4:2:2"
+    if qualities is None:
+        qualities = [np.random.randint(0, 101)]
+    if subsamples is None:
+        subsamples = ["4:2:2"]
     if dataDirectory is None:
         dataDirectory = "./data/datasetBmp"
     if useStdHuffmanTable is None:
-        useStdHuffmanTable = False
-    outputDirectory = f"./data/treated/quality{quality}-subsample{subsample}-stdHf{useStdHuffmanTable}"
-    i = 0
+        useStdHuffmanTable = [False]
     stat = np.zeros(
-        (LIM, 3), dtype=object
-    )  # first parameter is size before compression, second after, and third the time to achieve compression
-    for filename in os.listdir(dataDirectory):
-        if i >= LIM:
-            break
-        f = os.path.join(dataDirectory, filename)
-        if not os.path.exists(outputDirectory):
-            os.makedirs(outputDirectory)
-        f_out = os.path.join(outputDirectory, filename + ".jpg")
-        if os.path.isfile(f):
-            previousSize = os.stat(f).st_size
-            image = Image.open(f)
-            time = t.time_ns()
-            encoder.write_jpeg(
-                f_out, np.array(image), quality, subsample, useStdHuffmanTable
-            )
-            time = t.time_ns() - time
-            newSize = os.stat(f_out).st_size
-            stat[i][0] = previousSize
-            stat[i][1] = newSize
-            stat[i][2] = time
-        i += 1
-    if DeleteFilesAfterward:
-        shutil.rmtree(outputDirectory)
-    write_stat("./data/treated/stat.txt", stat, quality, subsample, useStdHuffmanTable)
+                    (LIM * len(qualities) * len(subsamples) * len(useStdHuffmanTable), 6), dtype=object
+                )  # dim 0 : quality factor, dim 1 : subsample method, dim 2 : usage of std Hf Tables, dim 3 : size before compression, dim 4 : size after compression, dim 5 : time to compress
+    i = 0
+    i_max = LIM * len(qualities) * len(subsamples) * len(useStdHuffmanTable)
+    filesTreated = rd.choices(os.listdir(dataDirectory), k=LIM)
+    for quality in qualities:
+        for subsample in subsamples:
+            for hfTables in useStdHuffmanTable:
+                outputDirectory = f"./data/treated/quality{quality}-subsample{subsample}-stdHf{hfTables}"
+                for filename in filesTreated:
+                    f = os.path.join(dataDirectory, filename)
+                    if not os.path.exists(outputDirectory):
+                        os.makedirs(outputDirectory)
+                    f_out = os.path.join(outputDirectory, filename + ".jpg")
+                    if os.path.isfile(f):
+                        previousSize = os.stat(f).st_size
+                        image = Image.open(f)
+                        time = t.time()
+                        encoder.write_jpeg(
+                            f_out, np.array(image), quality, subsample, hfTables
+                        )
+                        time = t.time() - time
+                        newSize = os.stat(f_out).st_size
+                        stat[i][0] = quality
+                        stat[i][1] = subsample
+                        stat[i][2] = hfTables
+                        stat[i][3] = previousSize
+                        stat[i][4] = newSize
+                        stat[i][5] = time
+                    i += 1
+                    print(f'{i}/{i_max}', end='\r')
+                if DeleteFilesAfterward:
+                    shutil.rmtree(outputDirectory)
+    return stat
 
 
 def write_stat(statFile, stat, quality, subsample, standHuffTables):
@@ -78,8 +86,23 @@ def write_stat(statFile, stat, quality, subsample, standHuffTables):
         f.write(f"Ratio is {avgPreviousSize / avgNewSize:.2f}")
 
 
-def write_stat_csv(outputDirectory, stat, quality, subsample, standHuffTables):
-    pass
+def write_stat_csv(output, stat):
+    if os.path.isfile(output):
+        pd.DataFrame(stat).to_csv(output, mode="a", index=False, header=False)
+    else:
+        pd.DataFrame(stat).to_csv(
+            output,
+            index=False,
+            header=[
+                "quality",
+                "subsample",
+                "stdHuffmanTables",
+                "oldSize",
+                "newSize",
+                "time",
+            ],
+        )
+
 
 def energyCompaction(imgPath):
     img = cv2.imread(imgPath)
@@ -89,11 +112,13 @@ def energyCompaction(imgPath):
     )  # Convert RGB to YCrCb (Cb applies V, and Cr applies U).
 
     Y, Cr, Cb = cv2.split(padding(imgYCrCB, 8, 8))
-    Y = Y.astype('int') - 128
+    Y = Y.astype("int") - 128
     blocks_Y = utils.divide_blocks(Y, 8, 8)
     dctBlocks_Y = np.zeros_like(blocks_Y)
     for i in range(len(blocks_Y)):
-        dctBlocks_Y[i] = dct(dct(blocks_Y[i], axis=0, norm="ortho"), axis=1, norm="ortho")
+        dctBlocks_Y[i] = dct(
+            dct(blocks_Y[i], axis=0, norm="ortho"), axis=1, norm="ortho"
+        )
     avg_Y = utils.averageMatrix(blocks_Y)
     avgDct_Y = utils.averageMatrix(dctBlocks_Y)
 
@@ -101,25 +126,26 @@ def energyCompaction(imgPath):
     arr1 = blocks_Y[x]
     arr2 = dctBlocks_Y[x]
 
-    fig, (ax1, ax2 )= plt.subplots(1, 2)
+    fig, (ax1, ax2) = plt.subplots(1, 2)
 
-    valueMax, valueMin = max(np.max(arr1), np.max(arr2)), min(np.min(arr1), np.min(arr2))
+    valueMax, valueMin = max(np.max(arr1), np.max(arr2)), min(
+        np.min(arr1), np.min(arr2)
+    )
     # fig.suptitle('Matrice de la luminance de "villeLyon.jpg"')
 
     ax1.matshow(arr1, cmap="cool", vmin=valueMin, vmax=valueMax)
-    ax1.set_title('avant DCT')
+    ax1.set_title("avant DCT")
 
     ax2.matshow(arr2, cmap="cool", vmin=valueMin, vmax=valueMax)
-    ax2.set_title('après DCT')
-    
-    
+    ax2.set_title("après DCT")
+
     for i in range(arr1.shape[0]):
         for j in range(arr1.shape[1]):
-            cNormal= int(arr1[i, j])
+            cNormal = int(arr1[i, j])
             cDct = int(arr2[i, j])
-            ax1.text(i, j, str(cNormal), va='center', ha='center')
-            ax2.text(i, j, str(cDct), va='center', ha='center')
-    plt.savefig('./data/energyCompaction.png', transparent=True)
+            ax1.text(i, j, str(cNormal), va="center", ha="center")
+            ax2.text(i, j, str(cDct), va="center", ha="center")
+    plt.savefig("./data/energyCompaction.png", transparent=True)
 
 
 def rgbToYCbCr_channel_bis():
@@ -163,12 +189,15 @@ if __name__ == "__main__":
     # compare()
     # rgbToYCbCr_channel_bis()
     energyCompaction("./data/villeLyon.jpg")
-    test = np.array([[93, 90, 83, 68, 61, 61, 46, 21],
-                    [102, 92, 95, 77, 65, 60, 49, 32],
-                    [69, 55, 47, 57, 65, 60, 72, 65],
-                    [55, 55, 40, 42, 23, 1, 11, 38],
-                    [55, 57, 47, 53, 35, 59, -2, 26],
-                    [64, 41, 42, 55, 60, 57, 25, -8],
-                    [77, 87, 58, -2, -5, 14, -10, -35],
-                    [38, 14, 33, 33, -21, -23, -43, -34]])
-    print(dct(dct(test, axis=0, norm="ortho"), axis=1, norm='ortho'))
+    # test = np.array([[93, 90, 83, 68, 61, 61, 46, 21],
+    #                 [102, 92, 95, 77, 65, 60, 49, 32],
+    #                 [69, 55, 47, 57, 65, 60, 72, 65],
+    #                 [55, 55, 40, 42, 23, 1, 11, 38],
+    #                 [55, 57, 47, 53, 35, 59, -2, 26],
+    #                 [64, 41, 42, 55, 60, 57, 25, -8],
+    #                 [77, 87, 58, -2, -5, 14, -10, -35],
+    #                 [38, 14, 33, 33, -21, -23, -43, -34]])
+    # print(dct(dct(test, axis=0, norm="ortho"), axis=1, norm='ortho'))
+
+    # stat = compare(qualities = list(range(1, 101, 10)), subsamples=['4:4:4', '4:2:0', '4:1:1', '4:2:2'], useStdHuffmanTable=[True, False], DeleteFilesAfterward=True)
+    # write_stat_csv("./data/treated/stat.csv", stat)
