@@ -5,7 +5,11 @@ __pycache__
 test.py
 .pytest_cache
 
-decoded
+
+*.ai
+*.pptx
+
+datasetBmp
 
 #latex related
 *.aux
