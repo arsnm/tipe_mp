@@ -567,6 +567,44 @@ $l_i =$ longueur des mots du codes
 \end{frame}
 
 \begin{frame}
+    \frametitle{Annexe - Démonstration Theorème du Codage de Source (1)}
+
+    \footnotesize
+    Pour cette démonstration, \textbf{on se limitera aux cas du codage par symboles} (type Huffman). \\
+    Montrons d'abord qu'étant donné un code uniquement décodable opérant sur une source $X$ qui peut prendre ses valeurs dans l’alphabet fini $A$ avec la
+    distribution de probabilité $p$ alors la longueur moyenne de ce code vérifie : \textbf{$H(X) \leqslant \bar{l}$}. \\
+    \vspace*{1em}
+    Si un code est uniquement décodable, il vérifie l'inégalité de Kraft, donc $\sum 2^{-l_i} \leqslant 1$. \\
+    On définie donc une nouvelle loi de probabilité : $q_i = a2^{-l_i}$ avec $a \geqslant 1$ tel que $\sum q_i = 1$.
+    L'inégalité de Gibbs (admise) donne : \begin{align*}
+        - \underbrace{\sum p_i \log_2 (p_i)}_{= H(X)} & \leqslant - \sum p_i \log_2 (q_i) \\
+        & = - \sum p_i \log_2 (a2^{-l_i}) \\
+        & = \underbrace{-\sum p_i \log_2 (\underbrace{a}_{\geqslant 1})}_{\leqslant 0} + \underbrace{\sum p_i l_i}_{= \bar{l}} \\
+        \text{D'où } H(X) & \leqslant \bar{l}
+    \end{align*} 
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Annexe - Démonstration Theorème du Codage de Source (2)}
+
+    \footnotesize
+    Montrons dorénavant qu'il existe un code uniquement décodable pour la source $X$ de loi $p$
+    tel que la longueur moyenne du code vérifie $ \bar{l} < H(X) + 1$. \\
+    \vspace*{1em}
+    Pour tout $i$, notons $l_i \in \mathbb{N}^*$ tel que $2^{-l_i} \leqslant p_i < 2^{-l_i + 1}$. \\
+    On a alors \begin{align*}
+        &-l_i \leqslant \log_2 p_i < -l_i + 1 \\
+        \iff &-\log_2 p_i \leqslant l_i < -\log_2 p_k + 1 \\
+    \end{align*}
+    On alors directement : $H(X) \leqslant \bar{l} < H(X) + 1$
+    De plus $\sum 2^{l_k} \leqslant \sum 2^{\log_2 p_k} = 1$ \\
+    L'inégalité de Kraft est donc vérifiée, on peut donc effectivement construire ce code, \textbf{d'où le résultat}.
+
+
+\end{frame}
+
+\begin{frame}
     \frametitle{Annexe - Exemple Matrice de Quantification}
 
     \centering
@@ -580,15 +618,15 @@ $l_i =$ longueur des mots du codes
     \frametitle{Annexe - Listing Programmation}
 
     \begin{itemize}
-        \item ycbcr.py $\rightarrow$ slides 32-33
-        \item huffman.py $\rightarrow$ slides 33-35
-        \item fft.py $\rightarrow$ slides 36-39
-        \item complex.py $\rightarrow$ slides 39-44
-        \item arithmetic\_coding.py $\rightarrow$ slides 44-47
-        \item utils.py $\rightarrow$ slides 47-59
-        \item huffman\_jpeg.py $\rightarrow$ slides 59-73
-        \item encoder.py $\rightarrow$ slides 73-80
-        \item comparator.py $\rightarrow$ slides 80-89
+        \item ycbcr.py $\rightarrow$ slides 34-35
+        \item huffman.py $\rightarrow$ slides 35-37
+        \item fft.py $\rightarrow$ slides 38-41
+        \item complex.py $\rightarrow$ slides 41-46
+        \item arithmetic\_coding.py $\rightarrow$ slides 46-49        
+        \item utils.py $\rightarrow$ slides 49-61
+        \item huffman\_jpeg.py $\rightarrow$ slides 61-75
+        \item encoder.py $\rightarrow$ slides 75-82
+        \item comparator.py $\rightarrow$ slides 82-91
     \end{itemize}
 
 \end{frame}
