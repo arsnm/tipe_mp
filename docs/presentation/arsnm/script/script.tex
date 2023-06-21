@@ -1,0 +1,164 @@
+\documentclass{article}
+
+\usepackage[french]{babel}
+\usepackage[a4paper, portrait, margin=20mm]{geometry}
+\usepackage{caption}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amsfonts, amssymb, mathtools}
+\usepackage{stmaryrd}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage[ddmmyyyy]{datetime}
+\usepackage{adjustbox}
+\usepackage[explicit]{titlesec}
+\usepackage{lastpage}
+
+% page numeration
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[R]{\thepage/\pageref{LastPage}}
+
+% document info
+\makeatletter
+\title{Script de Pr\'esentation}
+\date{\today}
+\newcommand{\matiere}{TIPE}
+\newcommand{\classe}{MP\textsuperscript{*} }
+\author{Arsène MALLET}
+
+% header
+\fancypagestyle{firstpage}{
+    \fancyhead[L]{\@author}
+    \fancyhead[C]{\classe - \matiere}
+    \fancyhead[R]{\@date}
+}
+
+% slide counter / section reformater
+\titleformat{\section}
+{\Large\bfseries}
+{Slide \thesection}{1em}{#1}
+
+% timer command
+\usepackage{xparse}
+
+\ExplSyntaxOn
+\NewDocumentCommand{\duration}{m}
+ {
+  \didou_duration:n { #1 }
+ }
+
+\fp_new:N \l_didou_duration_hrs_fp
+\fp_new:N \l_didou_duration_min_fp
+\fp_new:N \l_didou_duration_sec_fp
+
+\cs_new_protected:Nn \didou_duration:n
+ {
+  \fp_compare:nTF { #1 < 60 }
+   {% easy case
+    \fp_eval:n { round(#1,3) }
+   }
+   {
+    \fp_compare:nTF { #1 < 3600 }
+     {% only minutes
+      \didou_duration_minutes:n { #1 }
+     }
+     {% hours
+      \didou_duration_hours:n { #1 }
+     }
+   }
+ }
+
+\cs_new_protected:Nn \didou_duration_minutes:n
+ {
+  \fp_set:Nn \l_didou_duration_min_fp { trunc( #1/60,0 ) }
+  \fp_set:Nn \l_didou_duration_sec_fp
+   {
+    round( #1-\l_didou_duration_min_fp * 60,0 )
+   }
+  % now print
+  \fp_eval:n { \l_didou_duration_min_fp }
+  :
+  \fp_compare:nT { \l_didou_duration_sec_fp < 10 } { 0 } % two digits
+  \fp_eval:n { \l_didou_duration_sec_fp }
+ }
+\cs_generate_variant:Nn \didou_duration_minutes:n { V }
+
+\cs_new_protected:Nn \didou_duration_hours:n
+ {
+  \fp_set:Nn \l_didou_duration_hrs_fp { trunc( #1/3600,0 ) }
+  \fp_set:Nn \l_didou_duration_min_fp { #1 - \l_didou_duration_hrs_fp * 3600 }
+  % print the hours
+  \fp_eval:n { \l_didou_duration_hrs_fp } :
+  % go to minutes
+  \fp_compare:nT { \l_didou_duration_min_fp < 600 } { 0 }
+  \didou_duration_minutes:V \l_didou_duration_min_fp
+ }
+
+\ExplSyntaxOff
+
+\begin{document}
+
+\thispagestyle{firstpage}
+
+\begin{center}
+    \huge\bfseries{\@title}
+\end{center}
+
+\section{Page initiale}
+
+Bonjour [mesdames et messieurs] du jury, je suis ici aujourd'hui pour vous
+présenter ma soutenance de TIPE. Cette année, moi et deux camarades avons travaillé
+sur la compression de données, et plus particulièrement son application aux images. 
+
+\section{Introduction}
+
+Tout d'abord, commençons par \textbf{définir} ce qu'est la compression. La compression
+est un \textbf{procédé transformant une suite de bits $A$ en une suite de bits $B$ plus 
+courte pouvant restituer les mêmes informations, ou des informations voisines.}
+
+La notion d'informations voisines intervient lorsque l'on évoque des \textbf{deux types de compressions différent} :
+la compression \textbf{avec perte} (que l'on appelle \textit{lossy} en anglais) et la compression \textbf{sans perte}
+(\textit{lossless}). Nous verrons au cours de cette présentation comment choisir entre ces deux type et comment on peut
+également les faire fonctionner ensemble.
+
+Dans le thème de TIPE de cette \textbf{la ville}, la compression est une notion très présente, puisque
+\textbf{la nécessité} constante d'échange d'informations fait qu'il y a beaucoup de données à traiter et
+\textbf{la compression} permet de \textbf{de stocker et traiter efficacement toutes ces données}.
+
+\section{Procédés de compression}
+
+Afin de compresser des données, il existe \textbf{tout un tas de différents procédés}. Dans la compression
+\textit{lossless} on retrouve encore deux types, que sont les compressions \textbf{entropiques} et \textbf{algorithmiques}.
+La compression entropiques supposent des \textit{a priori} sur ce que l'on compresse, comme des \textbf{tableaux de fréquence}
+ou des \textbf{tables de codage} comme on le verra plus tard, tandis que les compressions algorithmiques ne nécessitent que de connaître
+la méthode de compression utilisés afin de décompressé.
+
+De manière générale, les compressions fonctionnent par réorganisation des données, et par l'application de transformées mathématiques
+permettant de stocker l'information de manière plus optimale.
+
+C'est le cas de l'algorithme JPEG, le format d'image le plus utilisés et celui sur lequel nous avons basé nos recherches, 
+qui utilisent beaucoup des procédés les plus populaires pour compressé des images. Nous verrons son implementation 
+au fur et à mesure de la présentation.
+
+\section{Entropie et Codage Optimal (1)}
+
+Lorsqu'il est question de codage en compression, la théorie mathématique qui définit les fondements de ces codages est la théorie
+de l'information notamment fondé par Claude Shannon en 1948. Cette théorie probabiliste, qui quantifie l'information d'un ensemble
+de messages, se base sur la notion d'entropie, définit ainsi : [lire définition du diapo]
+
+\section{Entropie et Codage Optimal (2)}
+
+Voici quelques définitions importantes de la théorie de l'information, dont nous aurons besoin pour la suite : 
+[lire et expliquer les définitions] \\
+Rq: l'extension $C^+$ est l'application qui à $\Omega^*$ associe la concatenation des codes.
+
+\section{Entropie et Codage Optimal (3)}
+
+Une famille de code uniquement décodable tel que définit précédemment est celle des code préfixe : [lire définition]
+
+[Présenter l'exemple]
+
+\section{Entropie et Codage Optimal (4)}
+
+\end{document}
